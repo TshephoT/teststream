@@ -1,0 +1,26 @@
+{
+  "name": "@teststream/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.app.json",
+    "lint": "echo \"Linting will be configured in the next foundation step.\""
+  },
+  "dependencies": {
+    "@teststream/shared-types": "workspace:*",
+    "@vitejs/plugin-react": "^4.3.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "styled-components": "^6.1.13"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.3",
+    "@types/react-dom": "^19.0.2",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.7"
+  }
+}

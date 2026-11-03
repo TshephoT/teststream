@@ -1,0 +1,18 @@
+{
+  "name": "teststream",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev": "pnpm --filter @teststream/shared-types build && pnpm --parallel --filter @teststream/web --filter @teststream/api dev",
+    "build": "pnpm --recursive build",
+    "typecheck": "pnpm --recursive typecheck",
+    "lint": "pnpm --recursive lint",
+    "db:up": "docker compose up -d mongo",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f mongo"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
