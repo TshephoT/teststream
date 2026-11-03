@@ -88,7 +88,7 @@ const LessonLink = styled.button({ border: 0, padding: 0, background: "transpare
 export function LearningPath() {
   const [expanded, setExpanded] = useState("fundamentals");
   const [showLesson, setShowLesson] = useState(false);
-  const [activeLesson, setActiveLesson] = useState<"what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle">("what-is-testing");
+  const [activeLesson, setActiveLesson] = useState<"what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles">("what-is-testing");
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   if (showLesson) return <LessonView lessonId={activeLesson} onBack={() => setShowLesson(false)} onComplete={() => setCompletedLessons(current => current.includes(activeLesson) ? current : [...current, activeLesson])} />;
   return <>
@@ -112,7 +112,7 @@ export function LearningPath() {
           {isExpanded && <Details>
             <Outcome><strong>What you will be able to do</strong><p>{discipline.outcome}</p></Outcome>
             <Columns>
-              <div><Subheading>Lessons in this discipline</Subheading><LessonList>{discipline.lessons.map((lesson, index) => <li key={lesson}>{discipline.id === "fundamentals" && index < 4 ? <LessonLink onClick={() => { const lessonId = index === 0 ? "what-is-testing" : index === 1 ? "why-quality-matters" : index === 2 ? "software-development-lifecycle" : "software-testing-lifecycle"; setActiveLesson(lessonId); setShowLesson(true); }}>{lesson} {completedLessons.includes(index === 0 ? "what-is-testing" : index === 1 ? "why-quality-matters" : index === 2 ? "software-development-lifecycle" : "software-testing-lifecycle") ? "✓" : "→"}</LessonLink> : lesson}</li>)}</LessonList></div>
+              <div><Subheading>Lessons in this discipline</Subheading><LessonList>{discipline.lessons.map((lesson, index) => <li key={lesson}>{discipline.id === "fundamentals" && index < 5 ? <LessonLink onClick={() => { const lessonId = index === 0 ? "what-is-testing" : index === 1 ? "why-quality-matters" : index === 2 ? "software-development-lifecycle" : index === 3 ? "software-testing-lifecycle" : "testing-principles"; setActiveLesson(lessonId); setShowLesson(true); }}>{lesson} {completedLessons.includes(index === 0 ? "what-is-testing" : index === 1 ? "why-quality-matters" : index === 2 ? "software-development-lifecycle" : index === 3 ? "software-testing-lifecycle" : "testing-principles") ? "✓" : "→"}</LessonLink> : lesson}</li>)}</LessonList></div>
               <div><Subheading>Practical application</Subheading><Practice><p>{discipline.practice}</p></Practice></div>
             </Columns>
           </Details>}
