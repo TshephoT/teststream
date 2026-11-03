@@ -81,7 +81,11 @@ const Outcome = styled.div({
 const Columns = styled.div({ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginTop: 16, "@media(max-width:700px)": { gridTemplateColumns: "1fr" } });
 const Subheading = styled.h4({ margin: "0 0 10px", color: "#dce8f8", fontSize: 11 });
 const LessonList = styled.ol({ margin: 0, paddingLeft: 19, color: "#9eafc7", fontSize: 11, lineHeight: 1.9, li: { paddingLeft: 3 } });
-const Practice = styled.div({ border: "1px solid #2b405c", borderRadius: 9, padding: 13, background: "#101c2d", p: { margin: 0, color: "#9eafc7", fontSize: 11, lineHeight: 1.7 } });
+const Practice = styled.div({ border: "1px solid #2b405c", borderRadius: 9, padding: 14, background: "#101c2d", p: { margin: "0 0 11px", color: "#9eafc7", fontSize: 11, lineHeight: 1.7 } });
+const PracticeTitle = styled.h4({ margin: "0 0 8px", color: "#e5efff", fontSize: 13 });
+const PracticeMeta = styled.div({ marginBottom: 12, color: "#83a9d8", fontSize: 10, fontWeight: 700 });
+const PracticeList = styled.ul({ margin: "0 0 14px", paddingLeft: 18, color: "#aebed3", fontSize: 10, lineHeight: 1.85 });
+const StartPracticeButton = styled.button({ border: "1px solid #477bb8", borderRadius: 7, padding: "9px 12px", background: "#1b3b61", color: "#dcecff", fontSize: 11, fontWeight: 700, cursor: "pointer", "&:hover": { background: "#244b77" } });
 const Note = styled.p({ margin: "16px 2px 0", color: "#7186a3", fontSize: 10, lineHeight: 1.6 });
 const LessonLink = styled.button({ border: 0, padding: 0, background: "transparent", color: "#8ebaff", font: "inherit", textAlign: "left", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 3 });
 
@@ -113,7 +117,18 @@ export function LearningPath() {
             <Outcome><strong>What you will be able to do</strong><p>{discipline.outcome}</p></Outcome>
             <Columns>
               <div><Subheading>Lessons in this discipline</Subheading><LessonList>{discipline.lessons.map((lesson, index) => <li key={lesson}>{discipline.id === "fundamentals" && index <= 10 ? <LessonLink type="button" onClick={() => { const lessonIds = ["what-is-testing", "why-quality-matters", "software-development-lifecycle", "software-testing-lifecycle", "testing-principles", "test-levels-types", "requirements-acceptance-criteria", "test-scenarios-test-cases", "test-design-techniques", "defect-reporting-lifecycle", "practical-testing-exercise"] as const; setActiveLesson(lessonIds[index]); setShowLesson(true); }}>{lesson} {completedLessons.includes(["what-is-testing", "why-quality-matters", "software-development-lifecycle", "software-testing-lifecycle", "testing-principles", "test-levels-types", "requirements-acceptance-criteria", "test-scenarios-test-cases", "test-design-techniques", "defect-reporting-lifecycle", "practical-testing-exercise"][index]) ? "✓" : "→"}</LessonLink> : lesson}</li>)}</LessonList></div>
-              <div><Subheading>Practical application</Subheading><Practice><p>{discipline.practice}</p></Practice></div>
+              <div><Subheading>Practical application</Subheading>{discipline.id === "fundamentals" ? <Practice>
+                <PracticeTitle>Your first QA assignment</PracticeTitle>
+                <p>Test a simulated banking money-transfer feature. Work through the requirements, identify risks, design test scenarios and investigate a defect.</p>
+                <PracticeMeta>15–20 minutes · Beginner friendly</PracticeMeta>
+                <PracticeList>
+                  <li>Requirement clarification questions</li>
+                  <li>Test scenarios and detailed test cases</li>
+                  <li>A clear defect report</li>
+                  <li>Retest and regression results</li>
+                </PracticeList>
+                <StartPracticeButton type="button" onClick={() => { setActiveLesson("practical-testing-exercise"); setShowLesson(true); }}>Start practical exercise →</StartPracticeButton>
+              </Practice> : <Practice><p>{discipline.practice}</p></Practice>}</div>
             </Columns>
           </Details>}
         </Card>;
