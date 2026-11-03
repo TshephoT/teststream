@@ -14,7 +14,7 @@ const Feedback = styled.div<{ $correct: boolean }>(({ $correct }) => ({ padding:
 const Actions = styled.div({ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" });
 const Button = styled.button<{ $primary?: boolean }>(({ $primary }) => ({ border: "1px solid " + ($primary ? "#4b8cf5" : "#2b3b53"), background: $primary ? "#3479e7" : "#142136", color: $primary ? "#fff" : "#b7c7dc", padding: "10px 14px", borderRadius: 8, fontSize: 11, fontWeight: 700, cursor: "pointer", opacity: 1, "&:disabled": { opacity: .45, cursor: "not-allowed" } }));
 
-type Props = { lessonId: "what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles" | "test-levels-types" | "requirements-acceptance-criteria"; onBack: () => void; onComplete: () => void };
+type Props = { lessonId: "what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles" | "test-levels-types" | "requirements-acceptance-criteria" | "test-scenarios-test-cases"; onBack: () => void; onComplete: () => void };
 
 export function LessonView({ lessonId, onBack, onComplete }: Props) {
   const [answer, setAnswer] = useState<number | null>(null);
@@ -25,20 +25,78 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
   const isPrinciplesLesson = lessonId === "testing-principles";
   const isLevelsTypesLesson = lessonId === "test-levels-types";
   const isRequirementsLesson = lessonId === "requirements-acceptance-criteria";
+  const isTestCasesLesson = lessonId === "test-scenarios-test-cases";
   const correctIndex = isQualityLesson ? 2 : 1;
   const correctAnswer = answer === correctIndex;
-  const title = isRequirementsLesson ? "Understanding Requirements and Acceptance Criteria" : isLevelsTypesLesson ? "Test Levels and Test Types" : isPrinciplesLesson ? "Testing Principles" : isStlcLesson ? "The Software Testing Lifecycle (STLC)" : isSdlcLesson ? "The Software Development Lifecycle (SDLC)" : isQualityLesson ? "Why Quality Matters" : "What is Software Testing?";
+  const title = isTestCasesLesson ? "Test Scenarios and Test Cases" : isRequirementsLesson ? "Understanding Requirements and Acceptance Criteria" : isLevelsTypesLesson ? "Test Levels and Test Types" : isPrinciplesLesson ? "Testing Principles" : isStlcLesson ? "The Software Testing Lifecycle (STLC)" : isSdlcLesson ? "The Software Development Lifecycle (SDLC)" : isQualityLesson ? "Why Quality Matters" : "What is Software Testing?";
 
   return <Page>
     <Back onClick={onBack}>← Back to Software Testing Fundamentals</Back>
     <Hero>
-      <Eyebrow>Software Testing Fundamentals · Lesson {isRequirementsLesson ? "07" : isLevelsTypesLesson ? "06" : isPrinciplesLesson ? "05" : isStlcLesson ? "04" : isSdlcLesson ? "03" : isQualityLesson ? "02" : "01"}</Eyebrow>
+      <Eyebrow>Software Testing Fundamentals · Lesson {isTestCasesLesson ? "08" : isRequirementsLesson ? "07" : isLevelsTypesLesson ? "06" : isPrinciplesLesson ? "05" : isStlcLesson ? "04" : isSdlcLesson ? "03" : isQualityLesson ? "02" : "01"}</Eyebrow>
       <h2>{title}</h2>
-      <p>{isRequirementsLesson ? "Learn how to read requirements, ask useful questions and turn acceptance criteria into clear, testable expectations." : isLevelsTypesLesson ? "Understand the different layers and purposes of testing, and learn how they work together to build confidence in a product." : isPrinciplesLesson ? "Explore seven foundational principles that guide effective testing and help testers make better decisions." : isStlcLesson ? "Follow the testing process from understanding requirements through planning, execution, defect handling and closure." : isSdlcLesson ? "Follow a software product from its first idea to release and ongoing improvement — and see where testing fits at every stage." : isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use."}</p>
+      <p>{isTestCasesLesson ? "Turn requirements into focused test scenarios and detailed test cases, with practical examples of test data, expected results and boundary checks." : isRequirementsLesson ? "Learn how to read requirements, ask useful questions and turn acceptance criteria into clear, testable expectations." : isLevelsTypesLesson ? "Understand the different layers and purposes of testing, and learn how they work together to build confidence in a product." : isPrinciplesLesson ? "Explore seven foundational principles that guide effective testing and help testers make better decisions." : isStlcLesson ? "Follow the testing process from understanding requirements through planning, execution, defect handling and closure." : isSdlcLesson ? "Follow a software product from its first idea to release and ongoing improvement — and see where testing fits at every stage." : isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use."}</p>
       <Meta><span>◷ 8–10 minutes</span><span>◈ Beginner</span><span>◇ Concept + knowledge check</span></Meta>
     </Hero>
 
-    {isRequirementsLesson ? <>
+    {isTestCasesLesson ? <>
+      <Panel>
+        <h3>From requirements to practical checks</h3>
+        <p>In the previous lesson, you learned how requirements and acceptance criteria describe what a product should do. The next step is to decide how to check that behaviour.</p>
+        <p>A <strong>test scenario</strong> describes a situation or behaviour you want to verify. A <strong>test case</strong> turns that scenario into a specific set of conditions, data, actions and expected results.</p>
+        <Callout><strong>Key difference</strong>Scenario: Verify that a customer can transfer money to a valid beneficiary. Test case: Log in as a customer with sufficient funds, transfer R500 to a saved beneficiary, and verify the debit, credit and confirmation.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Identify test scenarios</h3>
+        <p>Start with the acceptance criteria and ask: what could a user do, what could go wrong, and what important conditions could change the outcome?</p>
+        <p>For a banking transfer feature, useful scenarios include:</p>
+        <ul>
+          <li>Transfer money when the account has sufficient funds.</li>
+          <li>Attempt a transfer when the account has insufficient funds.</li>
+          <li>Attempt to transfer to an invalid or inactive beneficiary.</li>
+          <li>Submit a transfer with a zero, negative or above-limit amount.</li>
+          <li>Lose network connectivity while submitting the transfer.</li>
+          <li>Submit the same transfer action more than once and check for duplicate processing.</li>
+        </ul>
+        <Callout><strong>Think beyond the happy path</strong>A positive scenario checks expected use with valid information. Negative scenarios check how the system handles invalid input, unavailable services, missing information or other failure conditions.</Callout>
+      </Panel>
+      <Panel>
+        <h3>What belongs in a test case?</h3>
+        <p>A useful test case gives another tester enough information to repeat the check and compare the actual result with the expected result.</p>
+        <ul>
+          <li><strong>Test case ID and title:</strong> A unique reference and a short description of what is being checked.</li>
+          <li><strong>Preconditions:</strong> What must already be true, such as the customer being logged in and having a saved beneficiary.</li>
+          <li><strong>Test data:</strong> The specific values used, such as a transfer amount of R500 and an account balance of R2,000.</li>
+          <li><strong>Steps:</strong> The actions the tester performs, in the correct order.</li>
+          <li><strong>Expected result:</strong> The outcome that should happen after the steps.</li>
+          <li><strong>Actual result and status:</strong> What happened during execution and whether the test passed or failed.</li>
+        </ul>
+        <Callout><strong>Example test case</strong>Title: Transfer R500 to a saved beneficiary<br/>Precondition: Customer is logged in and has R2,000 available.<br/>Test data: Amount R500; beneficiary is valid and active.<br/>Steps: Open Transfers; select the beneficiary; enter R500; review and confirm.<br/>Expected result: The transfer is accepted once, the available balance decreases by R500, and a confirmation with the correct amount and beneficiary is displayed.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Positive, negative and boundary-value tests</h3>
+        <p>Test design is not about writing as many cases as possible. It is about selecting cases that provide useful coverage of the requirement and its risks.</p>
+        <ul>
+          <li><strong>Positive testing:</strong> Use valid data and confirm the intended operation succeeds.</li>
+          <li><strong>Negative testing:</strong> Use invalid or unsuitable data and confirm the system handles it safely and clearly.</li>
+          <li><strong>Boundary-value testing:</strong> Check values at and around the edges of an allowed range, where defects commonly occur.</li>
+        </ul>
+        <p>For example, if the agreed minimum transfer is R10 and the maximum is R50,000, test R10, R9.99, R10.01, R50,000, R50,000.01 and a value comfortably inside the range. The actual limits must come from the requirement.</p>
+        <Callout><strong>Useful habit</strong>Do not invent business rules. If the minimum, maximum, precision or behaviour for an invalid amount is not defined, ask the team to clarify it before finalising the expected result.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Make test cases clear and maintainable</h3>
+        <ul>
+          <li>Keep each test focused on a clear objective.</li>
+          <li>Use specific, realistic test data rather than vague instructions such as “enter a valid amount”.</li>
+          <li>Write steps in the order they should be performed.</li>
+          <li>Describe observable expected results, not assumptions about how the code works.</li>
+          <li>Avoid combining many unrelated checks into one test case.</li>
+          <li>Link test cases back to the requirement or acceptance criterion they cover.</li>
+        </ul>
+        <p>Good test cases help different people repeat the same check consistently, understand failures and see which requirements have been covered.</p>
+      </Panel>
+    </> : isRequirementsLesson ? <>
       <Panel>
         <h3>Before you test, understand what should happen</h3>
         <p>Imagine a banking app introduces a new beneficiary feature. A customer should be able to add someone they trust and later send money to that person. But what information is required? Must the beneficiary be verified? What happens if the account number is invalid?</p>
@@ -327,9 +385,13 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
 
     <Panel>
       <h3>Quick knowledge check</h3>
-      <p>{isRequirementsLesson ? "A user story says customers can add beneficiaries. One acceptance criterion says: \"The system should be easy to use.\" What should the tester do?" : isLevelsTypesLesson ? "A developer has fixed a defect in the transfer fee calculation. The tester reruns the exact test that originally failed to confirm the fix. What is this called?" : isPrinciplesLesson ? "A tester has run the same successful payment test every day for several weeks, but it has not revealed any new defects. Which principle suggests the tester should review and expand the tests?" : isStlcLesson ? "A tester has executed a transfer test and found that the app sends R5,000 instead of the expected R500. What should happen next?" : isSdlcLesson ? "A tester reviews a user story and notices that the payment failure behaviour is not explained. Developers have not started coding yet. What is the best action?" : isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?"}</p>
+      <p>{isTestCasesLesson ? "A transfer requirement allows amounts from R10 to R50,000. Which set of values is most useful for checking the lower boundary?" : isRequirementsLesson ? "A user story says customers can add beneficiaries. One acceptance criterion says: \"The system should be easy to use.\" What should the tester do?" : isLevelsTypesLesson ? "A developer has fixed a defect in the transfer fee calculation. The tester reruns the exact test that originally failed to confirm the fix. What is this called?" : isPrinciplesLesson ? "A tester has run the same successful payment test every day for several weeks, but it has not revealed any new defects. Which principle suggests the tester should review and expand the tests?" : isStlcLesson ? "A tester has executed a transfer test and found that the app sends R5,000 instead of the expected R500. What should happen next?" : isSdlcLesson ? "A tester reviews a user story and notices that the payment failure behaviour is not explained. Developers have not started coding yet. What is the best action?" : isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?"}</p>
       <Question>
-        {isRequirementsLesson ? <>
+        {isTestCasesLesson ? <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. R100 and R500, because they are normal transfer amounts.</Option>
+          <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. R9.99, R10 and R10.01, because they check just below, at and just above the minimum.</Option>
+          <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. R1, R5 and R8, because they are all below the minimum.</Option>
+        </> : isRequirementsLesson ? <>
           <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. Accept it as written because it is part of the requirement.</Option>
           <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Ask stakeholders to clarify the expected behaviour in specific, observable terms.</Option>
           <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Decide independently what “easy to use” means and test that.</Option>
@@ -355,7 +417,7 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
           <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. To guarantee that the application will never fail.</Option>
         </>}
       </Question>
-      {answer !== null && <Feedback $correct={correctAnswer}>{correctAnswer ? (isRequirementsLesson ? "Correct. Vague criteria are difficult to verify consistently. The team should agree on clear, observable expectations before treating the story as testable." : isLevelsTypesLesson ? "Correct. Confirmation testing repeats the test that exposed the defect to check that the specific fix works. Regression testing checks for unintended side effects elsewhere." : isPrinciplesLesson ? "Correct. Repeating the same tests can become less effective over time. Improve the test suite with new scenarios, data and exploratory checks." : isStlcLesson ? "Exactly. Record the failure clearly, report it for investigation and retest once a fix is available." : isSdlcLesson ? "Exactly. Clarifying requirements early helps prevent misunderstandings from becoming defects later. Testing contributes before code is written." : isQualityLesson ? "Exactly. A product can work functionally and still be poor quality if it puts customer information at risk." : "That's right. Testing checks expected and unexpected behaviour, helps reveal defects and provides information about risk.") : (isRequirementsLesson ? "Not quite. The phrase is subjective and does not tell the tester what result to observe. Ask the team to define specific, verifiable expectations." : isLevelsTypesLesson ? "Not quite. The question describes repeating the original failed test to verify one particular fix. Regression testing has a broader purpose: checking for side effects." : isPrinciplesLesson ? "Not quite. The clue is that repeating the same tests stops revealing new information. Which principle says tests need to be refreshed?" : isStlcLesson ? "A failed test should be documented with evidence and raised as a defect so the team can investigate and verify a fix." : isSdlcLesson ? "Not quite. Think about when the team can most easily clarify an unclear requirement — before or after implementation?" : isQualityLesson ? "Not quite. Think about the different dimensions of quality. Correct payment processing does not make an exposure of private information acceptable." : "Not quite. Think about what the tester is trying to learn by checking normal use and unusual input. Testing cannot guarantee that software will never fail.")}</Feedback>}
+      {answer !== null && <Feedback $correct={correctAnswer}>{correctAnswer ? (isTestCasesLesson ? "Correct. Boundary-value testing checks values just below, at and just above a limit. This helps reveal errors in how the system handles the edge of an allowed range." : isRequirementsLesson ? "Correct. Vague criteria are difficult to verify consistently. The team should agree on clear, observable expectations before treating the story as testable." : isLevelsTypesLesson ? "Correct. Confirmation testing repeats the test that exposed the defect to check that the specific fix works. Regression testing checks for unintended side effects elsewhere." : isPrinciplesLesson ? "Correct. Repeating the same tests can become less effective over time. Improve the test suite with new scenarios, data and exploratory checks." : isStlcLesson ? "Exactly. Record the failure clearly, report it for investigation and retest once a fix is available." : isSdlcLesson ? "Exactly. Clarifying requirements early helps prevent misunderstandings from becoming defects later. Testing contributes before code is written." : isQualityLesson ? "Exactly. A product can work functionally and still be poor quality if it puts customer information at risk." : "That's right. Testing checks expected and unexpected behaviour, helps reveal defects and provides information about risk.") : (isTestCasesLesson ? "Not quite. The most useful boundary checks are immediately below the minimum, exactly at the minimum and immediately above it. Testing only ordinary values may miss boundary defects." : isRequirementsLesson ? "Not quite. The phrase is subjective and does not tell the tester what result to observe. Ask the team to define specific, verifiable expectations." : isLevelsTypesLesson ? "Not quite. The question describes repeating the original failed test to verify one particular fix. Regression testing has a broader purpose: checking for side effects." : isPrinciplesLesson ? "Not quite. The clue is that repeating the same tests stops revealing new information. Which principle says tests need to be refreshed?" : isStlcLesson ? "A failed test should be documented with evidence and raised as a defect so the team can investigate and verify a fix." : isSdlcLesson ? "Not quite. Think about when the team can most easily clarify an unclear requirement — before or after implementation?" : isQualityLesson ? "Not quite. Think about the different dimensions of quality. Correct payment processing does not make an exposure of private information acceptable." : "Not quite. Think about what the tester is trying to learn by checking normal use and unusual input. Testing cannot guarantee that software will never fail.")}</Feedback>}
     </Panel>
 
     <Actions>
