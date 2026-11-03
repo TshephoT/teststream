@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { LessonView } from "./LessonView.js";
 
 type Discipline = {
   id: string;
@@ -82,9 +83,13 @@ const Subheading = styled.h4({ margin: "0 0 10px", color: "#dce8f8", fontSize: 1
 const LessonList = styled.ol({ margin: 0, paddingLeft: 19, color: "#9eafc7", fontSize: 11, lineHeight: 1.9, li: { paddingLeft: 3 } });
 const Practice = styled.div({ border: "1px solid #2b405c", borderRadius: 9, padding: 13, background: "#101c2d", p: { margin: 0, color: "#9eafc7", fontSize: 11, lineHeight: 1.7 } });
 const Note = styled.p({ margin: "16px 2px 0", color: "#7186a3", fontSize: 10, lineHeight: 1.6 });
+const LessonLink = styled.button({ border: 0, padding: 0, background: "transparent", color: "#8ebaff", font: "inherit", textAlign: "left", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 3 });
 
 export function LearningPath() {
   const [expanded, setExpanded] = useState("fundamentals");
+  const [showLesson, setShowLesson] = useState(false);
+  const [lessonComplete, setLessonComplete] = useState(false);
+  if (showLesson) return <LessonView onBack={() => setShowLesson(false)} onComplete={() => setLessonComplete(true)} />;
   return <>
     <IntroCard>
       <div className="eyebrow">Your learning journey</div>
@@ -106,13 +111,13 @@ export function LearningPath() {
           {isExpanded && <Details>
             <Outcome><strong>What you will be able to do</strong><p>{discipline.outcome}</p></Outcome>
             <Columns>
-              <div><Subheading>Lessons in this discipline</Subheading><LessonList>{discipline.lessons.map(lesson => <li key={lesson}>{lesson}</li>)}</LessonList></div>
+              <div><Subheading>Lessons in this discipline</Subheading><LessonList>{discipline.lessons.map((lesson, index) => <li key={lesson}>{discipline.id === "fundamentals" && index === 0 ? <LessonLink onClick={() => setShowLesson(true)}>{lesson} {lessonComplete ? "✓" : "→"}</LessonLink> : lesson}</li>)}</LessonList></div>
               <div><Subheading>Practical application</Subheading><Practice><p>{discipline.practice}</p></Practice></div>
             </Columns>
           </Details>}
         </Card>;
       })}
     </Stack>
-    <Note>Learning content and availability will be released progressively. Your progress will be saved once learner accounts and progress tracking are connected.</Note>
+    <Note>Your first lesson is ready to explore. Lesson completion is currently held in this session; account-based progress saving will be added in a later milestone.</Note>
   </>;
 }
