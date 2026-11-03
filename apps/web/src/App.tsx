@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import type { HealthResponse } from "@teststream/shared-types";
+import { LearningPath } from "./components/LearningPath.js";
 
 type Section = "Overview" | "My learning" | "Practice labs" | "Test products" | "Assessments" | "Resources";
 const navigation: { label: Section; icon: string; note?: string }[] = [
@@ -149,7 +150,7 @@ export function App() {
             ) : (
               <>
                 <Welcome><div><Eyebrow>TestStream workspace</Eyebrow><H1>{section}</H1><Intro>{sectionDescription(section)}</Intro></div><GhostButton onClick={()=>setSection("Overview")}>← Back to overview</GhostButton></Welcome>
-                {section === "Test products" ? <Panel><PanelHead><h2>Available practice products</h2><span>LEARN BY TESTING REALISTIC APPS</span></PanelHead><ProductGrid><Product><ProductVisual $tone="linear-gradient(130deg,#1b3b61,#244e7d)">🛍</ProductVisual><ProductInfo><h3>ShopStream</h3><p>Explore a sample online store. Practise browsing, search, product details, cart and checkout scenarios.</p><span className="tag">Available · UI + API</span></ProductInfo></Product><Product><ProductVisual $tone="linear-gradient(130deg,#263b54,#31536c)">💳</ProductVisual><ProductInfo><h3>PayPilot</h3><p>Payment workflows and transaction validation exercises.</p><span className="tag">Coming soon</span></ProductInfo></Product><Product><ProductVisual $tone="linear-gradient(130deg,#293451,#4b4775)">📅</ProductVisual><ProductInfo><h3>Slotly</h3><p>Booking and availability workflows with realistic edge cases.</p><span className="tag">Coming soon</span></ProductInfo></Product></ProductGrid></Panel> : <EmptyState><strong>{section} is being prepared.</strong>This space is part of your TestStream workspace. Structured learning content and practical exercises will appear here as the platform grows.</EmptyState>}
+                {section === "My learning" ? <LearningPath /> : section === "Test products" ? <Panel><PanelHead><h2>Available practice products</h2><span>LEARN BY TESTING REALISTIC APPS</span></PanelHead><ProductGrid><Product><ProductVisual $tone="linear-gradient(130deg,#1b3b61,#244e7d)">🛍</ProductVisual><ProductInfo><h3>ShopStream</h3><p>Explore a sample online store. Practise browsing, search, product details, cart and checkout scenarios.</p><span className="tag">Available · UI + API</span></ProductInfo></Product><Product><ProductVisual $tone="linear-gradient(130deg,#263b54,#31536c)">💳</ProductVisual><ProductInfo><h3>PayPilot</h3><p>Payment workflows and transaction validation exercises.</p><span className="tag">Coming soon</span></ProductInfo></Product><Product><ProductVisual $tone="linear-gradient(130deg,#293451,#4b4775)">📅</ProductVisual><ProductInfo><h3>Slotly</h3><p>Booking and availability workflows with realistic edge cases.</p><span className="tag">Coming soon</span></ProductInfo></Product></ProductGrid></Panel> : <EmptyState><strong>{section} is being prepared.</strong>This space is part of your TestStream workspace. Structured learning content and practical exercises will appear here as the platform grows.</EmptyState>}
               </>
             )}
             <div style={{display:"flex",justifyContent:"space-between",gap:12,marginTop:25,color:"#637691",fontSize:10}}><span>TESTSTREAM · PRACTICAL QA LEARNING</span><span>v0.2.0 · {isHealthy?"Connected":"Development mode"}</span></div>
@@ -163,7 +164,7 @@ export function App() {
 function sectionDescription(section: Section): string {
   const descriptions: Record<Section,string> = {
     "Overview": "Your learning and practice workspace.",
-    "My learning": "Structured learning paths that take you from QA fundamentals to confident testing practice.",
+    "My learning": "One practical QA learning journey, from testing fundamentals through UI and API testing.",
     "Practice labs": "Hands-on exercises to turn concepts into practical testing skills.",
     "Test products": "Explore realistic sample applications and practise testing them like a QA engineer.",
     "Assessments": "Check your understanding and track your progress as you build new skills.",
