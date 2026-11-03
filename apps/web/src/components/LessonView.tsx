@@ -14,7 +14,7 @@ const Feedback = styled.div<{ $correct: boolean }>(({ $correct }) => ({ padding:
 const Actions = styled.div({ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" });
 const Button = styled.button<{ $primary?: boolean }>(({ $primary }) => ({ border: "1px solid " + ($primary ? "#4b8cf5" : "#2b3b53"), background: $primary ? "#3479e7" : "#142136", color: $primary ? "#fff" : "#b7c7dc", padding: "10px 14px", borderRadius: 8, fontSize: 11, fontWeight: 700, cursor: "pointer", opacity: 1, "&:disabled": { opacity: .45, cursor: "not-allowed" } }));
 
-type Props = { lessonId: "what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle"; onBack: () => void; onComplete: () => void };
+type Props = { lessonId: "what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles"; onBack: () => void; onComplete: () => void };
 
 export function LessonView({ lessonId, onBack, onComplete }: Props) {
   const [answer, setAnswer] = useState<number | null>(null);
@@ -22,20 +22,52 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
   const isQualityLesson = lessonId === "why-quality-matters";
   const isSdlcLesson = lessonId === "software-development-lifecycle";
   const isStlcLesson = lessonId === "software-testing-lifecycle";
+  const isPrinciplesLesson = lessonId === "testing-principles";
   const correctIndex = isQualityLesson ? 2 : 1;
   const correctAnswer = answer === correctIndex;
-  const title = isStlcLesson ? "The Software Testing Lifecycle (STLC)" : isSdlcLesson ? "The Software Development Lifecycle (SDLC)" : isQualityLesson ? "Why Quality Matters" : "What is Software Testing?";
+  const title = isPrinciplesLesson ? "Testing Principles" : isStlcLesson ? "The Software Testing Lifecycle (STLC)" : isSdlcLesson ? "The Software Development Lifecycle (SDLC)" : isQualityLesson ? "Why Quality Matters" : "What is Software Testing?";
 
   return <Page>
     <Back onClick={onBack}>← Back to Software Testing Fundamentals</Back>
     <Hero>
-      <Eyebrow>Software Testing Fundamentals · Lesson {isStlcLesson ? "04" : isSdlcLesson ? "03" : isQualityLesson ? "02" : "01"}</Eyebrow>
+      <Eyebrow>Software Testing Fundamentals · Lesson {isPrinciplesLesson ? "05" : isStlcLesson ? "04" : isSdlcLesson ? "03" : isQualityLesson ? "02" : "01"}</Eyebrow>
       <h2>{title}</h2>
-      <p>{isStlcLesson ? "Follow the testing process from understanding requirements through planning, execution, defect handling and closure." : isSdlcLesson ? "Follow a software product from its first idea to release and ongoing improvement — and see where testing fits at every stage." : isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use."}</p>
+      <p>{isPrinciplesLesson ? "Explore seven foundational principles that guide effective testing and help testers make better decisions." : isStlcLesson ? "Follow the testing process from understanding requirements through planning, execution, defect handling and closure." : isSdlcLesson ? "Follow a software product from its first idea to release and ongoing improvement — and see where testing fits at every stage." : isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use."}</p>
       <Meta><span>◷ 8–10 minutes</span><span>◈ Beginner</span><span>◇ Concept + knowledge check</span></Meta>
     </Hero>
 
-    {isStlcLesson ? <>
+    {isPrinciplesLesson ? <>
+      <Panel>
+        <h3>Why do testers need principles?</h3>
+        <p>Imagine you are testing a banking app. You have checked the login screen, transferred money successfully and confirmed that the balance updates. Does that prove the whole application is free of defects?</p>
+        <p>No. There may be thousands of other combinations of users, accounts, amounts, devices, network conditions and unexpected actions. Testing principles help us understand what testing can achieve, where its limits are and how to use our time wisely.</p>
+        <Callout><strong>Key idea</strong>Testing principles are guiding ideas that apply across different projects, tools and testing approaches. They help testers make thoughtful decisions rather than simply follow a checklist.</Callout>
+      </Panel>
+      <Panel>
+        <h3>The seven fundamental testing principles</h3>
+        <ol>
+          <li><strong>Testing shows the presence of defects, not their absence.</strong> Testing can reveal defects, but passing tests do not prove that no defects remain. A successful payment test gives evidence about the cases checked, not a guarantee that every payment will work.</li>
+          <li><strong>Exhaustive testing is impossible.</strong> It is usually not practical to test every possible input, path and condition. A transfer feature could have countless combinations of amounts, accounts, balances and network states. Prioritise based on risk and use techniques to select valuable tests.</li>
+          <li><strong>Early testing saves time and money.</strong> Start testing activities as early as possible. Reviewing a payment requirement before development can uncover a missing rule before it becomes code that needs rework.</li>
+          <li><strong>Defects cluster together.</strong> A small number of areas often contain a large proportion of the defects found. If testing repeatedly finds issues in payment processing, that area may deserve more investigation. Do not assume other areas are defect-free.</li>
+          <li><strong>Tests wear out (the pesticide paradox).</strong> Running the same tests repeatedly may eventually stop finding new defects. Review and improve tests, add new scenarios and explore different data and workflows.</li>
+          <li><strong>Testing is context dependent.</strong> The right approach depends on the product, risks, users and environment. A banking payment system needs different levels of control and evidence from a simple personal blog.</li>
+          <li><strong>Absence-of-errors is a fallacy.</strong> Software can have very few known defects and still fail to meet user needs. A payment app that works exactly as specified is not useful if the specification itself misses what customers need.</li>
+        </ol>
+      </Panel>
+      <Panel>
+        <h3>Putting the principles into practice</h3>
+        <p>Suppose a new payment feature is due for release and time is limited. A tester can apply the principles by:</p>
+        <ul>
+          <li>Prioritising high-risk flows such as duplicate payments, incorrect amounts and insufficient funds.</li>
+          <li>Reviewing requirements early and asking questions before implementation is complete.</li>
+          <li>Looking beyond the usual happy-path test cases and varying test data and conditions.</li>
+          <li>Investigating areas where defects have repeatedly appeared, without ignoring the rest of the system.</li>
+          <li>Considering whether the feature solves the customer's actual problem, not just whether it matches the written specification.</li>
+        </ul>
+        <Callout><strong>Remember</strong>Principles guide judgement. They do not replace a test strategy, test design techniques or knowledge of the product.</Callout>
+      </Panel>
+    </> : isStlcLesson ? <>
       <Panel>
         <h3>Testing has a lifecycle too</h3>
         <p>Imagine your team is building a banking app feature that lets customers transfer money. Before testing begins, the team needs to understand the requirements, plan the checks, prepare test data and an environment, and agree how results will be reported.</p>
@@ -182,9 +214,13 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
 
     <Panel>
       <h3>Quick knowledge check</h3>
-      <p>{isStlcLesson ? "A tester has executed a transfer test and found that the app sends R5,000 instead of the expected R500. What should happen next?" : isSdlcLesson ? "A tester reviews a user story and notices that the payment failure behaviour is not explained. Developers have not started coding yet. What is the best action?" : isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?"}</p>
+      <p>{isPrinciplesLesson ? "A tester has run the same successful payment test every day for several weeks, but it has not revealed any new defects. Which principle suggests the tester should review and expand the tests?" : isStlcLesson ? "A tester has executed a transfer test and found that the app sends R5,000 instead of the expected R500. What should happen next?" : isSdlcLesson ? "A tester reviews a user story and notices that the payment failure behaviour is not explained. Developers have not started coding yet. What is the best action?" : isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?"}</p>
       <Question>
-        {isSdlcLesson ? <>
+        {isPrinciplesLesson ? <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. Exhaustive testing is possible.</Option>
+          <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Tests wear out (the pesticide paradox).</Option>
+          <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Defects cluster together.</Option>
+        </> : isSdlcLesson ? <>
           <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. Wait until the application is released and see what happens.</Option>
           <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Raise the gap now so the team can clarify the expected behaviour before implementation.</Option>
           <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Ignore it because requirements are only the product owner's responsibility.</Option>
@@ -198,7 +234,7 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
           <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. To guarantee that the application will never fail.</Option>
         </>}
       </Question>
-      {answer !== null && <Feedback $correct={correctAnswer}>{correctAnswer ? (isStlcLesson ? "Exactly. Record the failure clearly, report it for investigation and retest once a fix is available." : isSdlcLesson ? "Exactly. Clarifying requirements early helps prevent misunderstandings from becoming defects later. Testing contributes before code is written." : isQualityLesson ? "Exactly. A product can work functionally and still be poor quality if it puts customer information at risk." : "That's right. Testing checks expected and unexpected behaviour, helps reveal defects and provides information about risk.") : (isStlcLesson ? "Not quite. A failed test should be documented with evidence and raised as a defect so the team can investigate and verify a fix." : isSdlcLesson ? "Not quite. Think about when the team can most easily clarify an unclear requirement — before or after implementation?" : isQualityLesson ? "Not quite. Think about the different dimensions of quality. Correct payment processing does not make an exposure of private information acceptable." : "Not quite. Think about what the tester is trying to learn by checking normal use and unusual input. Testing cannot guarantee that software will never fail.")}</Feedback>}
+      {answer !== null && <Feedback $correct={correctAnswer}>{correctAnswer ? (isPrinciplesLesson ? "Correct. Repeating the same tests can become less effective over time. Improve the test suite with new scenarios, data and exploratory checks." : isStlcLesson ? "Exactly. Record the failure clearly, report it for investigation and retest once a fix is available." : isSdlcLesson ? "Exactly. Clarifying requirements early helps prevent misunderstandings from becoming defects later. Testing contributes before code is written." : isQualityLesson ? "Exactly. A product can work functionally and still be poor quality if it puts customer information at risk." : "That's right. Testing checks expected and unexpected behaviour, helps reveal defects and provides information about risk.") : (isPrinciplesLesson ? "Not quite. The clue is that repeating the same tests stops revealing new information. Which principle says tests need to be refreshed?" : isStlcLesson ? A failed test should be documented with evidence and raised as a defect so the team can investigate and verify a fix." : isSdlcLesson ? "Not quite. Think about when the team can most easily clarify an unclear requirement — before or after implementation?" : isQualityLesson ? "Not quite. Think about the different dimensions of quality. Correct payment processing does not make an exposure of private information acceptable." : "Not quite. Think about what the tester is trying to learn by checking normal use and unusual input. Testing cannot guarantee that software will never fail.")}</Feedback>}
     </Panel>
 
     <Actions>
