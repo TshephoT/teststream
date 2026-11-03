@@ -14,26 +14,67 @@ const Feedback = styled.div<{ $correct: boolean }>(({ $correct }) => ({ padding:
 const Actions = styled.div({ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" });
 const Button = styled.button<{ $primary?: boolean }>(({ $primary }) => ({ border: "1px solid " + ($primary ? "#4b8cf5" : "#2b3b53"), background: $primary ? "#3479e7" : "#142136", color: $primary ? "#fff" : "#b7c7dc", padding: "10px 14px", borderRadius: 8, fontSize: 11, fontWeight: 700, cursor: "pointer", opacity: 1, "&:disabled": { opacity: .45, cursor: "not-allowed" } }));
 
-type Props = { lessonId: "what-is-testing" | "why-quality-matters"; onBack: () => void; onComplete: () => void };
+type Props = { lessonId: "what-is-testing" | "why-quality-matters" | "software-development-lifecycle"; onBack: () => void; onComplete: () => void };
 
 export function LessonView({ lessonId, onBack, onComplete }: Props) {
   const [answer, setAnswer] = useState<number | null>(null);
   const [completed, setCompleted] = useState(false);
   const isQualityLesson = lessonId === "why-quality-matters";
+  const isSdlcLesson = lessonId === "software-development-lifecycle";
   const correctIndex = isQualityLesson ? 2 : 1;
   const correctAnswer = answer === correctIndex;
-  const title = isQualityLesson ? "Why Quality Matters" : "What is Software Testing?";
+  const title = isSdlcLesson ? "The Software Development Lifecycle (SDLC)" : isQualityLesson ? "Why Quality Matters" : "What is Software Testing?";
 
   return <Page>
     <Back onClick={onBack}>← Back to Software Testing Fundamentals</Back>
     <Hero>
-      <Eyebrow>Software Testing Fundamentals · Lesson {isQualityLesson ? "02" : "01"}</Eyebrow>
+      <Eyebrow>Software Testing Fundamentals · Lesson {isSdlcLesson ? "03" : isQualityLesson ? "02" : "01"}</Eyebrow>
       <h2>{title}</h2>
-      <p>{isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use."}</p>
+      <p>{isSdlcLesson ? "Follow a software product from its first idea to release and ongoing improvement — and see where testing fits at every stage." : isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use."}</p>
       <Meta><span>◷ 8–10 minutes</span><span>◈ Beginner</span><span>◇ Concept + knowledge check</span></Meta>
     </Hero>
 
-    {!isQualityLesson ? <>
+    {isSdlcLesson ? <>
+      <Panel>
+        <h3>From an idea to a product people can use</h3>
+        <p>Imagine a business wants to launch an online shopping app. Customers should be able to browse products, add them to a basket, pay and track their orders. Teams break this work into stages so they can plan, build, check and improve the product.</p>
+        <p>The <strong>Software Development Lifecycle (SDLC)</strong> is a structured way of organising the work involved in creating and maintaining software. It describes the journey from identifying a need through building and operating a solution.</p>
+        <Callout><strong>Key idea</strong>The SDLC is the bigger journey of building software. Testing helps the team check quality and manage risk throughout that journey.</Callout>
+      </Panel>
+      <Panel>
+        <h3>The common stages of the SDLC</h3>
+        <p>Different organisations use different names and combine stages in different ways. A typical lifecycle includes:</p>
+        <ol>
+          <li><strong>Planning:</strong> Identify the problem, goals, scope, resources and risks. Is the shopping app worth building, and what should it achieve?</li>
+          <li><strong>Requirements and analysis:</strong> Understand what users and the business need. For example, customers must be able to pay securely and receive an order confirmation.</li>
+          <li><strong>Design:</strong> Plan how the solution will work, including its user experience, architecture, data and integrations.</li>
+          <li><strong>Development:</strong> Developers write the code and build the features.</li>
+          <li><strong>Testing:</strong> The team evaluates the product, checks requirements, explores risks and reports defects.</li>
+          <li><strong>Deployment:</strong> The software is released to an environment where users can access it.</li>
+          <li><strong>Maintenance:</strong> The team monitors the product, fixes issues, supports users and delivers improvements.</li>
+        </ol>
+        <Callout><strong>Remember</strong>These stages are a useful model, not a rule that every team must follow in a strict one-way sequence. Real projects often revisit earlier decisions as new information emerges.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Where does the tester fit in?</h3>
+        <p>A common misconception is that testers wait until developers finish everything before getting involved. In a healthy delivery process, testing starts much earlier.</p>
+        <ul>
+          <li><strong>Planning:</strong> Ask about risks, important user journeys and how success will be measured.</li>
+          <li><strong>Requirements:</strong> Review user stories, clarify unclear rules and identify missing acceptance criteria.</li>
+          <li><strong>Design:</strong> Review workflows and designs, identify usability or integration risks, and help plan test coverage.</li>
+          <li><strong>Development:</strong> Discuss testability, prepare test data and environments, and work with developers on early checks.</li>
+          <li><strong>Testing:</strong> Execute checks, explore behaviour, report defects and provide evidence about quality.</li>
+          <li><strong>Release and maintenance:</strong> Support release decisions, verify fixes, run regression tests and investigate issues reported by users.</li>
+        </ul>
+        <Callout><strong>Shift-left testing</strong>This means involving testing activities earlier in the lifecycle, rather than waiting until the end. Finding a misunderstanding in a requirement review can prevent expensive rework later.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Does every team work the same way?</h3>
+        <p>No. Some teams use a more sequential approach, often called Waterfall, where work moves through planned phases. Other teams use Agile approaches, delivering software in smaller increments and getting feedback frequently.</p>
+        <p>In Agile teams, planning, design, development and testing may happen repeatedly within short iterations or sprints. Testing is continuous and closely connected to the rest of the team's work.</p>
+        <p>Neither approach removes the need to understand requirements, manage risks, test changes and support software after release.</p>
+      </Panel>
+    </> : !isQualityLesson ? <>
       <Panel>
         <h3>Let's start with a simple example</h3>
         <p>Imagine you are using a banking app to send R500 to a friend. You enter their account details, confirm the amount and tap <strong>Send</strong>.</p>
@@ -110,9 +151,13 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
 
     <Panel>
       <h3>Quick knowledge check</h3>
-      <p>{isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?"}</p>
+      <p>{isSdlcLesson ? "A tester reviews a user story and notices that the payment failure behaviour is not explained. Developers have not started coding yet. What is the best action?" : isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?"}</p>
       <Question>
-        {isQualityLesson ? <>
+        {isSdlcLesson ? <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. Wait until the application is released and see what happens.</Option>
+          <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Raise the gap now so the team can clarify the expected behaviour before implementation.</Option>
+          <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Ignore it because requirements are only the product owner's responsibility.</Option>
+        </> : isQualityLesson ? <>
           <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. The app is high quality because payments work.</Option>
           <Option $selected={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Security is only important for banking staff.</Option>
           <Option $selected={answer === 2} $correct={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Quality has several dimensions; a security failure is serious even if payments work.</Option>
@@ -122,7 +167,7 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
           <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. To guarantee that the application will never fail.</Option>
         </>}
       </Question>
-      {answer !== null && <Feedback $correct={correctAnswer}>{correctAnswer ? (isQualityLesson ? "Exactly. A product can work functionally and still be poor quality if it puts customer information at risk." : "That's right. Testing checks expected and unexpected behaviour, helps reveal defects and provides information about risk.") : (isQualityLesson ? "Not quite. Think about the different dimensions of quality. Correct payment processing does not make an exposure of private information acceptable." : "Not quite. Think about what the tester is trying to learn by checking normal use and unusual input. Testing cannot guarantee that software will never fail.")}</Feedback>}
+      {answer !== null && <Feedback $correct={correctAnswer}>{correctAnswer ? (isSdlcLesson ? "Exactly. Clarifying requirements early helps prevent misunderstandings from becoming defects later. Testing contributes before code is written." : isQualityLesson ? "Exactly. A product can work functionally and still be poor quality if it puts customer information at risk." : "That's right. Testing checks expected and unexpected behaviour, helps reveal defects and provides information about risk.") : (isSdlcLesson ? "Not quite. Think about when the team can most easily clarify an unclear requirement — before or after implementation?" : isQualityLesson ? "Not quite. Think about the different dimensions of quality. Correct payment processing does not make an exposure of private information acceptable." : "Not quite. Think about what the tester is trying to learn by checking normal use and unusual input. Testing cannot guarantee that software will never fail.")}</Feedback>}
     </Panel>
 
     <Actions>
