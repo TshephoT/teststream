@@ -87,9 +87,9 @@ const LessonLink = styled.button({ border: 0, padding: 0, background: "transpare
 
 export function LearningPath() {
   const [expanded, setExpanded] = useState("fundamentals");
-  const [showLesson, setShowLesson] = useState(false);
-  const [lessonComplete, setLessonComplete] = useState(false);
-  if (showLesson) return <LessonView onBack={() => setShowLesson(false)} onComplete={() => setLessonComplete(true)} />;
+  const [showLesson, setShowLesson] = useState(false);\n  const [activeLesson, setActiveLesson] = useState<"what-is-testing" | "why-quality-matters">("what-is-testing");
+  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
+  if (showLesson) return <LessonView lessonId={activeLesson} onBack={() => setShowLesson(false)} onComplete={() => setCompletedLessons(current => current.includes(activeLesson) ? current : [...current, activeLesson])} />;
   return <>
     <IntroCard>
       <div className="eyebrow">Your learning journey</div>
@@ -111,7 +111,7 @@ export function LearningPath() {
           {isExpanded && <Details>
             <Outcome><strong>What you will be able to do</strong><p>{discipline.outcome}</p></Outcome>
             <Columns>
-              <div><Subheading>Lessons in this discipline</Subheading><LessonList>{discipline.lessons.map((lesson, index) => <li key={lesson}>{discipline.id === "fundamentals" && index === 0 ? <LessonLink onClick={() => setShowLesson(true)}>{lesson} {lessonComplete ? "✓" : "→"}</LessonLink> : lesson}</li>)}</LessonList></div>
+              <div><Subheading>Lessons in this discipline</Subheading><LessonList>{discipline.lessons.map((lesson, index) => <li key={lesson}>{discipline.id === "fundamentals" && index < 2 ? <LessonLink onClick={() => { setActiveLesson(index === 0 ? "what-is-testing" : "why-quality-matters"); setShowLesson(true); }}>{lesson} {completedLessons.includes(index === 0 ? "what-is-testing" : "why-quality-matters") ? "✓" : "→"}</LessonLink> : lesson}</li>)}</LessonList></div>
               <div><Subheading>Practical application</Subheading><Practice><p>{discipline.practice}</p></Practice></div>
             </Columns>
           </Details>}
