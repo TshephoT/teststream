@@ -18,7 +18,7 @@ const disciplines: Discipline[] = [
     id: "fundamentals", number: "01", title: "Software Testing Fundamentals",
     description: "Build a solid understanding of quality, the software development lifecycle and the work a tester does.",
     outcome: "Understand the purpose of testing, analyse simple requirements and explain how testing fits into delivery.",
-    lessons: ["What is software testing?", "Why quality matters", "The software development lifecycle", "The software testing lifecycle", "Testing principles", "Test levels and test types", "Understanding requirements and acceptance criteria", "Test scenarios and test cases", "Test design techniques"],
+    lessons: ["What is software testing?", "Why quality matters", "The software development lifecycle", "The software testing lifecycle", "Testing principles", "Test levels and test types", "Understanding requirements and acceptance criteria", "Test scenarios and test cases", "Test design techniques", "Defect reporting and the defect lifecycle"],
     practice: "Review a short product brief, identify testable requirements and write your first set of test scenarios.",
     status: "Available"
   },
@@ -88,7 +88,7 @@ const LessonLink = styled.button({ border: 0, padding: 0, background: "transpare
 export function LearningPath() {
   const [expanded, setExpanded] = useState("fundamentals");
   const [showLesson, setShowLesson] = useState(false);
-  const [activeLesson, setActiveLesson] = useState<"what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles" | "test-levels-types" | "requirements-acceptance-criteria" | "test-scenarios-test-cases" | "test-design-techniques">("what-is-testing");
+  const [activeLesson, setActiveLesson] = useState<"what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles" | "test-levels-types" | "requirements-acceptance-criteria" | "test-scenarios-test-cases" | "test-design-techniques" | "defect-reporting-lifecycle">("what-is-testing");
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   if (showLesson) return <LessonView lessonId={activeLesson} onBack={() => setShowLesson(false)} onComplete={() => setCompletedLessons(current => current.includes(activeLesson) ? current : [...current, activeLesson])} />;
   return <>
@@ -112,7 +112,7 @@ export function LearningPath() {
           {isExpanded && <Details>
             <Outcome><strong>What you will be able to do</strong><p>{discipline.outcome}</p></Outcome>
             <Columns>
-              <div><Subheading>Lessons in this discipline</Subheading><LessonList>{discipline.lessons.map((lesson, index) => <li key={lesson}>{discipline.id === "fundamentals" && index <= 8 ? <LessonLink type="button" onClick={() => { const lessonIds = ["what-is-testing", "why-quality-matters", "software-development-lifecycle", "software-testing-lifecycle", "testing-principles", "test-levels-types", "requirements-acceptance-criteria", "test-scenarios-test-cases", "test-design-techniques"] as const; setActiveLesson(lessonIds[index]); setShowLesson(true); }}>{lesson} {completedLessons.includes(["what-is-testing", "why-quality-matters", "software-development-lifecycle", "software-testing-lifecycle", "testing-principles", "test-levels-types", "requirements-acceptance-criteria", "test-scenarios-test-cases", "test-design-techniques"][index]) ? "✓" : "→"}</LessonLink> : lesson}</li>)}</LessonList></div>
+              <div><Subheading>Lessons in this discipline</Subheading><LessonList>{discipline.lessons.map((lesson, index) => <li key={lesson}>{discipline.id === "fundamentals" && index <= 9 ? <LessonLink type="button" onClick={() => { const lessonIds = ["what-is-testing", "why-quality-matters", "software-development-lifecycle", "software-testing-lifecycle", "testing-principles", "test-levels-types", "requirements-acceptance-criteria", "test-scenarios-test-cases", "test-design-techniques", "defect-reporting-lifecycle"] as const; setActiveLesson(lessonIds[index]); setShowLesson(true); }}>{lesson} {completedLessons.includes(["what-is-testing", "why-quality-matters", "software-development-lifecycle", "software-testing-lifecycle", "testing-principles", "test-levels-types", "requirements-acceptance-criteria", "test-scenarios-test-cases", "test-design-techniques", "defect-reporting-lifecycle"][index]) ? "✓" : "→"}</LessonLink> : lesson}</li>)}</LessonList></div>
               <div><Subheading>Practical application</Subheading><Practice><p>{discipline.practice}</p></Practice></div>
             </Columns>
           </Details>}
