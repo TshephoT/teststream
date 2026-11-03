@@ -14,81 +14,58 @@ const Feedback = styled.div<{ $correct: boolean }>(({ $correct }) => ({ padding:
 const Actions = styled.div({ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" });
 const Button = styled.button<{ $primary?: boolean }>(({ $primary }) => ({ border: "1px solid " + ($primary ? "#4b8cf5" : "#2b3b53"), background: $primary ? "#3479e7" : "#142136", color: $primary ? "#fff" : "#b7c7dc", padding: "10px 14px", borderRadius: 8, fontSize: 11, fontWeight: 700, cursor: "pointer", opacity: 1, "&:disabled": { opacity: .45, cursor: "not-allowed" } }));
 
-type Props = { lessonId: "what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "requirements-analysis"; onBack: () => void; onComplete: () => void };
+type Props = { lessonId: "what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle"; onBack: () => void; onComplete: () => void };
 
 export function LessonView({ lessonId, onBack, onComplete }: Props) {
   const [answer, setAnswer] = useState<number | null>(null);
   const [completed, setCompleted] = useState(false);
   const isQualityLesson = lessonId === "why-quality-matters";
   const isSdlcLesson = lessonId === "software-development-lifecycle";
-  const isRequirementsLesson = lessonId === "requirements-analysis";
+  const isStlcLesson = lessonId === "software-testing-lifecycle";
   const correctIndex = isQualityLesson ? 2 : 1;
   const correctAnswer = answer === correctIndex;
-  const title = isRequirementsLesson ? "Requirements Analysis" : isSdlcLesson ? "The Software Development Lifecycle (SDLC)" : isQualityLesson ? "Why Quality Matters" : "What is Software Testing?";
+  const title = isStlcLesson ? "The Software Testing Lifecycle (STLC)" : isSdlcLesson ? "The Software Development Lifecycle (SDLC)" : isQualityLesson ? "Why Quality Matters" : "What is Software Testing?";
 
   return <Page>
     <Back onClick={onBack}>← Back to Software Testing Fundamentals</Back>
     <Hero>
-      <Eyebrow>Software Testing Fundamentals · Lesson {isRequirementsLesson ? "04" : isSdlcLesson ? "03" : isQualityLesson ? "02" : "01"}</Eyebrow>
+      <Eyebrow>Software Testing Fundamentals · Lesson {isStlcLesson ? "04" : isSdlcLesson ? "03" : isQualityLesson ? "02" : "01"}</Eyebrow>
       <h2>{title}</h2>
-      <p>{isRequirementsLesson ? "Learn how to understand what a system must do, spot gaps in requirements and turn expectations into useful test scenarios." : isSdlcLesson ? "Follow a software product from its first idea to release and ongoing improvement — and see where testing fits at every stage." : isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use."}</p>
+      <p>{isStlcLesson ? "Follow the testing process from understanding requirements through planning, execution, defect handling and closure." : isSdlcLesson ? "Follow a software product from its first idea to release and ongoing improvement — and see where testing fits at every stage." : isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use."}</p>
       <Meta><span>◷ 8–10 minutes</span><span>◈ Beginner</span><span>◇ Concept + knowledge check</span></Meta>
     </Hero>
 
-    {isRequirementsLesson ? <>
+    {isStlcLesson ? <>
       <Panel>
-        <h3>Before you test, understand what should happen</h3>
-        <p>Imagine a customer is using a banking app to make a payment. The screen has a button labelled <strong>Pay now</strong>. What should happen when the customer taps it? How much can they send? What if they do not have enough money? What if the payment service is unavailable?</p>
-        <p>If the team has not agreed on these behaviours, how can a tester confidently decide whether the feature is working correctly?</p>
-        <Callout><strong>Key idea</strong>Requirements describe what a product or feature needs to do, the constraints it must respect and the outcomes it should provide. Testers analyse requirements to understand what needs to be checked.</Callout>
+        <h3>Testing has a lifecycle too</h3>
+        <p>Imagine your team is building a banking app feature that lets customers transfer money. Before testing begins, the team needs to understand the requirements, plan the checks, prepare test data and an environment, and agree how results will be reported.</p>
+        <p>The <strong>Software Testing Lifecycle (STLC)</strong> is the set of activities a testing team carries out to plan, design, execute and complete testing. It gives testing work structure and helps ensure important quality activities are not missed.</p>
+        <Callout><strong>Key idea</strong>The SDLC describes the broader process of building and maintaining software. The STLC focuses on the activities involved in testing that software.</Callout>
       </Panel>
       <Panel>
-        <h3>Functional and non-functional requirements</h3>
-        <p>Requirements commonly describe two broad aspects of a system:</p>
-        <ul>
-          <li><strong>Functional requirements:</strong> Describe what the system must do. Example: a customer can transfer money to a saved beneficiary, and the app displays a confirmation when the transfer succeeds.</li>
-          <li><strong>Non-functional requirements:</strong> Describe how well the system must operate or the constraints it must meet. Example: payment details must be protected, and the confirmation screen should load within an agreed response time.</li>
-        </ul>
-        <p>Both matter. A transfer feature may perform the correct action but still be unacceptable if it exposes sensitive information or takes too long to respond.</p>
-      </Panel>
-      <Panel>
-        <h3>User stories and acceptance criteria</h3>
-        <p>In Agile teams, a requirement may be described as a <strong>user story</strong>. A common format is:</p>
-        <Callout><strong>Example user story</strong>As a banking customer, I want to transfer money to a saved beneficiary so that I can pay someone without entering their details every time.</Callout>
-        <p>The story explains who needs something and why. <strong>Acceptance criteria</strong> add the specific conditions that must be satisfied for the story to be accepted.</p>
-        <p>For example:</p>
-        <ul>
-          <li>Given a customer has a valid saved beneficiary and sufficient funds, when they submit a valid transfer, then the payment is processed and a confirmation is displayed.</li>
-          <li>Given the customer has insufficient funds, when they try to submit the transfer, then the payment is not processed and a clear error is displayed.</li>
-          <li>Given the payment service is unavailable, when the customer submits the transfer, then the app communicates the outcome without falsely showing a successful payment.</li>
-        </ul>
-        <p>Acceptance criteria make expectations more specific and give the team a shared basis for implementation and testing.</p>
-      </Panel>
-      <Panel>
-        <h3>How testers analyse requirements</h3>
-        <p>Do not assume that a requirement is clear just because it is written down. Read it carefully and look for gaps that could lead to different interpretations.</p>
-        <ul>
-          <li><strong>Ambiguous:</strong> Could two people understand it differently? For example, what does “quickly” mean?</li>
-          <li><strong>Incomplete:</strong> Are important situations missing, such as insufficient funds or a service timeout?</li>
-          <li><strong>Conflicting:</strong> Does one requirement contradict another?</li>
-          <li><strong>Not testable:</strong> Is there a clear way to determine whether the requirement has been met?</li>
-          <li><strong>Unrealistic:</strong> Does it describe something the system or agreed constraints cannot reasonably support?</li>
-        </ul>
-        <Callout><strong>Good tester habit</strong>Ask specific, neutral questions. Instead of saying “this requirement is bad”, ask “What should the customer see if the payment times out after the request is submitted?”</Callout>
-      </Panel>
-      <Panel>
-        <h3>Turn requirements into test scenarios</h3>
-        <p>A <strong>test scenario</strong> describes a situation or behaviour you want to verify. It is a useful starting point for deciding what to test. From the payment requirements above, you could identify scenarios such as:</p>
+        <h3>The common phases of the STLC</h3>
         <ol>
-          <li>Submit a transfer with valid beneficiary details and sufficient funds.</li>
-          <li>Attempt a transfer when the account has insufficient funds.</li>
-          <li>Submit a transfer when the payment service is unavailable.</li>
-          <li>Check that the confirmation reflects the correct amount and beneficiary.</li>
-          <li>Check that sensitive payment information is not exposed to unauthorised users.</li>
+          <li><strong>Requirement analysis:</strong> Study requirements, identify what can be tested, clarify gaps and note risks. For a transfer feature, clarify limits, fees and failure behaviour.</li>
+          <li><strong>Test planning:</strong> Decide scope, approach, resources, responsibilities, tools, schedule and risks.</li>
+          <li><strong>Test case development:</strong> Create test scenarios and detailed test cases, identify test data and prepare automation where appropriate.</li>
+          <li><strong>Test environment setup:</strong> Prepare the application, services, configurations and test accounts needed to run checks.</li>
+          <li><strong>Test execution:</strong> Run tests, compare actual results with expected results, record evidence and report defects.</li>
+          <li><strong>Test cycle closure:</strong> Summarise coverage, results, outstanding defects, risks and lessons learned for stakeholders.</li>
         </ol>
-        <p>Later, you can expand each scenario into detailed test cases with preconditions, test data, steps and expected results. For now, focus on identifying the behaviours that matter.</p>
+        <Callout><strong>Remember</strong>Teams may use different names or combine phases. In Agile delivery, these activities often repeat for each feature or sprint.</Callout>
       </Panel>
-    </> : isSdlcLesson ? <>
+      <Panel>
+        <h3>What happens when a test fails?</h3>
+        <p>Suppose a transfer test expects R500 to be sent, but the app displays R5,000. The tester records the steps, test data, expected result, actual result and supporting evidence, then reports the defect.</p>
+        <p>The developer investigates and fixes the issue. The tester performs <strong>retesting</strong> to check the specific fix and may perform <strong>regression testing</strong> to check that related functionality still works.</p>
+        <p>Defect handling can send the team back through execution more than once. Testing is rarely a perfectly straight line.</p>
+      </Panel>
+      <Panel>
+        <h3>How the STLC fits into real teams</h3>
+        <p>Think of the phases as a guide, not a rigid checklist. A small change may need lightweight planning and a few focused checks. A high-risk payment feature may need deeper analysis, more test data and careful reporting.</p>
+        <p>The tester applies the right level of testing for the feature, its users and its risks, while keeping the team informed about progress and findings.</p>
+      </Panel>
+    </>: isSdlcLesson ? <>
       <Panel>
         <h3>From an idea to a product people can use</h3>
         <p>Imagine a business wants to launch an online shopping app. Customers should be able to browse products, add them to a basket, pay and track their orders. Teams break this work into stages so they can plan, build, check and improve the product.</p>
@@ -205,7 +182,7 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
 
     <Panel>
       <h3>Quick knowledge check</h3>
-      <p>{isRequirementsLesson ? "A requirement says: “The payment should be processed quickly.” It does not define what quickly means. What should the tester do?" : isSdlcLesson ? "A tester reviews a user story and notices that the payment failure behaviour is not explained. Developers have not started coding yet. What is the best action?" : isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?"}</p>
+      <p>{isStlcLesson ? "A tester has executed a transfer test and found that the app sends R5,000 instead of the expected R500. What should happen next?" : isSdlcLesson ? "A tester reviews a user story and notices that the payment failure behaviour is not explained. Developers have not started coding yet. What is the best action?" : isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?"}</p>
       <Question>
         {isSdlcLesson ? <>
           <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. Wait until the application is released and see what happens.</Option>
@@ -221,7 +198,7 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
           <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. To guarantee that the application will never fail.</Option>
         </>}
       </Question>
-      {answer !== null && <Feedback $correct={correctAnswer}>{correctAnswer ? (isRequirementsLesson ? "Exactly. A requirement should be clear and measurable. Ask the right stakeholder to agree on what “quickly” means before deciding whether the system passes." : isSdlcLesson ? "Exactly. Clarifying requirements early helps prevent misunderstandings from becoming defects later. Testing contributes before code is written." : isQualityLesson ? "Exactly. A product can work functionally and still be poor quality if it puts customer information at risk." : "That's right. Testing checks expected and unexpected behaviour, helps reveal defects and provides information about risk.") : (isRequirementsLesson ? "Not quite. Avoid inventing your own interpretation. The team needs an agreed, measurable expectation before it can be tested fairly." : isSdlcLesson ? "Not quite. Think about when the team can most easily clarify an unclear requirement — before or after implementation?" : isQualityLesson ? "Not quite. Think about the different dimensions of quality. Correct payment processing does not make an exposure of private information acceptable." : "Not quite. Think about what the tester is trying to learn by checking normal use and unusual input. Testing cannot guarantee that software will never fail.")}</Feedback>}
+      {answer !== null && <Feedback $correct={correctAnswer}>{correctAnswer ? (isStlcLesson ? "Exactly. Record the failure clearly, report it for investigation and retest once a fix is available." : isSdlcLesson ? "Exactly. Clarifying requirements early helps prevent misunderstandings from becoming defects later. Testing contributes before code is written." : isQualityLesson ? "Exactly. A product can work functionally and still be poor quality if it puts customer information at risk." : "That's right. Testing checks expected and unexpected behaviour, helps reveal defects and provides information about risk.") : (isStlcLesson ? "Not quite. A failed test should be documented with evidence and raised as a defect so the team can investigate and verify a fix." : isSdlcLesson ? "Not quite. Think about when the team can most easily clarify an unclear requirement — before or after implementation?" : isQualityLesson ? "Not quite. Think about the different dimensions of quality. Correct payment processing does not make an exposure of private information acceptable." : "Not quite. Think about what the tester is trying to learn by checking normal use and unusual input. Testing cannot guarantee that software will never fail.")}</Feedback>}
     </Panel>
 
     <Actions>
