@@ -14,7 +14,7 @@ const Feedback = styled.div<{ $correct: boolean }>(({ $correct }) => ({ padding:
 const Actions = styled.div({ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" });
 const Button = styled.button<{ $primary?: boolean }>(({ $primary }) => ({ border: "1px solid " + ($primary ? "#4b8cf5" : "#2b3b53"), background: $primary ? "#3479e7" : "#142136", color: $primary ? "#fff" : "#b7c7dc", padding: "10px 14px", borderRadius: 8, fontSize: 11, fontWeight: 700, cursor: "pointer", opacity: 1, "&:disabled": { opacity: .45, cursor: "not-allowed" } }));
 
-type Props = { lessonId: "what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles" | "test-levels-types" | "requirements-acceptance-criteria" | "test-scenarios-test-cases" | "test-design-techniques"; onBack: () => void; onComplete: () => void };
+type Props = { lessonId: "what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles" | "test-levels-types" | "requirements-acceptance-criteria" | "test-scenarios-test-cases" | "test-design-techniques" | "defect-reporting-lifecycle"; onBack: () => void; onComplete: () => void };
 
 export function LessonView({ lessonId, onBack, onComplete }: Props) {
   const [answer, setAnswer] = useState<number | null>(null);
@@ -27,20 +27,97 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
   const isRequirementsLesson = lessonId === "requirements-acceptance-criteria";
   const isTestCasesLesson = lessonId === "test-scenarios-test-cases";
   const isTestDesignLesson = lessonId === "test-design-techniques";
+  const isDefectLesson = lessonId === "defect-reporting-lifecycle";
   const correctIndex = isQualityLesson ? 2 : 1;
   const correctAnswer = answer === correctIndex;
-  const title = isTestDesignLesson ? "Test Design Techniques" : isTestCasesLesson ? "Test Scenarios and Test Cases" : isRequirementsLesson ? "Understanding Requirements and Acceptance Criteria" : isLevelsTypesLesson ? "Test Levels and Test Types" : isPrinciplesLesson ? "Testing Principles" : isStlcLesson ? "The Software Testing Lifecycle (STLC)" : isSdlcLesson ? "The Software Development Lifecycle (SDLC)" : isQualityLesson ? "Why Quality Matters" : "What is Software Testing?";
+  const title = isDefectLesson ? "Defect Reporting and the Defect Lifecycle" : isTestDesignLesson ? "Test Design Techniques" : isTestCasesLesson ? "Test Scenarios and Test Cases" : isRequirementsLesson ? "Understanding Requirements and Acceptance Criteria" : isLevelsTypesLesson ? "Test Levels and Test Types" : isPrinciplesLesson ? "Testing Principles" : isStlcLesson ? "The Software Testing Lifecycle (STLC)" : isSdlcLesson ? "The Software Development Lifecycle (SDLC)" : isQualityLesson ? "Why Quality Matters" : "What is Software Testing?";
 
   return <Page>
     <Back onClick={onBack}>← Back to Software Testing Fundamentals</Back>
     <Hero>
-      <Eyebrow>Software Testing Fundamentals · Lesson {isTestDesignLesson ? "09" : isTestCasesLesson ? "08" : isRequirementsLesson ? "07" : isLevelsTypesLesson ? "06" : isPrinciplesLesson ? "05" : isStlcLesson ? "04" : isSdlcLesson ? "03" : isQualityLesson ? "02" : "01"}</Eyebrow>
+      <Eyebrow>Software Testing Fundamentals · Lesson {isDefectLesson ? "10" : isTestDesignLesson ? "09" : isTestCasesLesson ? "08" : isRequirementsLesson ? "07" : isLevelsTypesLesson ? "06" : isPrinciplesLesson ? "05" : isStlcLesson ? "04" : isSdlcLesson ? "03" : isQualityLesson ? "02" : "01"}</Eyebrow>
       <h2>{title}</h2>
-      <p>{isTestDesignLesson ? "Learn structured techniques for selecting effective test cases, including equivalence partitions, boundaries, decision tables and state transitions." : isTestCasesLesson ? "Turn requirements into focused test scenarios and detailed test cases, with practical examples of test data, expected results and boundary checks." : isRequirementsLesson ? "Learn how to read requirements, ask useful questions and turn acceptance criteria into clear, testable expectations." : isLevelsTypesLesson ? "Understand the different layers and purposes of testing, and learn how they work together to build confidence in a product." : isPrinciplesLesson ? "Explore seven foundational principles that guide effective testing and help testers make better decisions." : isStlcLesson ? "Follow the testing process from understanding requirements through planning, execution, defect handling and closure." : isSdlcLesson ? "Follow a software product from its first idea to release and ongoing improvement — and see where testing fits at every stage." : isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use."}</p>
+      <p>{isDefectLesson ? "Learn to write clear defect reports, distinguish severity from priority and follow defects through investigation, fixing and verification." : isTestDesignLesson ? "Learn structured techniques for selecting effective test cases, including equivalence partitions, boundaries, decision tables and state transitions." : isTestCasesLesson ? "Turn requirements into focused test scenarios and detailed test cases, with practical examples of test data, expected results and boundary checks." : isRequirementsLesson ? "Learn how to read requirements, ask useful questions and turn acceptance criteria into clear, testable expectations." : isLevelsTypesLesson ? "Understand the different layers and purposes of testing, and learn how they work together to build confidence in a product." : isPrinciplesLesson ? "Explore seven foundational principles that guide effective testing and help testers make better decisions." : isStlcLesson ? "Follow the testing process from understanding requirements through planning, execution, defect handling and closure." : isSdlcLesson ? "Follow a software product from its first idea to release and ongoing improvement — and see where testing fits at every stage." : isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use."}</p>
       <Meta><span>◷ 8–10 minutes</span><span>◈ Beginner</span><span>◇ Concept + knowledge check</span></Meta>
     </Hero>
 
-    {isTestDesignLesson ? <>
+    {isDefectLesson ? <>
+      <Panel>
+        <h3>Finding a defect is only the beginning</h3>
+        <p>Imagine testing a banking app and discovering that a customer enters R500, but the confirmation screen displays R5,000. You have found unexpected behaviour, but the team still needs enough information to understand, investigate and fix it.</p>
+        <p>A defect report communicates the difference between what should happen and what actually happened. A useful report helps another person reproduce the issue without having to guess what you did.</p>
+        <Callout><strong>Key idea</strong>A defect report is not just a complaint that something is broken. It is clear, factual evidence that helps the team investigate and make a decision.</Callout>
+      </Panel>
+      <Panel>
+        <h3>What makes a good defect report?</h3>
+        <p>A report should be concise, specific and reproducible. Include the details that help the team understand the problem:</p>
+        <ul>
+          <li><strong>Title:</strong> A short summary of the problem and where it occurs.</li>
+          <li><strong>Environment:</strong> Application version, device or browser, operating system and test environment where relevant.</li>
+          <li><strong>Preconditions:</strong> Relevant account state, permissions, setup or data needed before reproducing the issue.</li>
+          <li><strong>Steps to reproduce:</strong> Numbered actions that another person can follow.</li>
+          <li><strong>Test data:</strong> The values or records used, while protecting sensitive information.</li>
+          <li><strong>Expected result:</strong> What should happen according to the requirement.</li>
+          <li><strong>Actual result:</strong> What happened instead.</li>
+          <li><strong>Evidence:</strong> Screenshots, screen recordings, logs, request and response details or timestamps, where appropriate.</li>
+        </ul>
+        <Callout><strong>Protect customer information</strong>Never include real passwords, PINs, full card details or unnecessary personal information in a defect report. Use approved test data and follow your organisation's data-handling rules.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Example: a useful banking defect</h3>
+        <Callout><strong>Title</strong>Transfer confirmation displays R5,000 when customer submits R500</Callout>
+        <p><strong>Environment:</strong> QA environment, Android app version 2.4.1.</p>
+        <p><strong>Precondition:</strong> Test customer is logged in and has sufficient available funds.</p>
+        <p><strong>Steps to reproduce:</strong></p>
+        <ol><li>Open Transfers.</li><li>Select a valid saved beneficiary.</li><li>Enter R500 as the transfer amount.</li><li>Review and confirm the transfer.</li></ol>
+        <p><strong>Expected result:</strong> The confirmation displays a transfer amount of R500.</p>
+        <p><strong>Actual result:</strong> The confirmation displays R5,000.</p>
+        <p><strong>Evidence:</strong> Attach a screenshot or recording, a timestamp and relevant transaction reference from the test environment.</p>
+        <p>This report gives the team a starting point to reproduce and investigate the problem. Do not claim that money was actually transferred unless you have verified that separately.</p>
+      </Panel>
+      <Panel>
+        <h3>Severity and priority are different</h3>
+        <p>These terms are related, but they answer different questions:</p>
+        <ul>
+          <li><strong>Severity:</strong> How serious is the impact of the defect on the system or user?</li>
+          <li><strong>Priority:</strong> How urgently should the team address it?</li>
+        </ul>
+        <p>A defect that exposes customer financial information may have very high severity and high priority. A small visual issue on a rarely used page may have low severity, although a business deadline or public launch could still make its priority higher.</p>
+        <p>Severity and priority are usually agreed with the team according to business impact, risk and release context. Do not assume that every organisation uses identical labels or definitions.</p>
+        <Callout><strong>Remember</strong>Severity describes impact. Priority describes urgency. A serious defect is not automatically the next item in every team's work queue, and a seemingly small issue can become urgent in the right context.</Callout>
+      </Panel>
+      <Panel>
+        <h3>The defect lifecycle</h3>
+        <p>A defect moves through a workflow as people investigate it, fix it and verify the result. A common example is:</p>
+        <ol>
+          <li><strong>New / Open:</strong> The tester records the defect and submits it for review.</li>
+          <li><strong>Triaged:</strong> The team reviews the report, confirms its validity and agrees on severity, priority and ownership.</li>
+          <li><strong>Assigned:</strong> The defect is assigned to someone to investigate.</li>
+          <li><strong>In progress:</strong> The developer or responsible team member works on a fix.</li>
+          <li><strong>Fixed / Resolved:</strong> A change has been made and is ready for verification.</li>
+          <li><strong>Retest:</strong> The tester repeats the relevant checks in an environment containing the fix.</li>
+          <li><strong>Closed:</strong> The tester confirms the reported issue is resolved and closes it according to the team's workflow.</li>
+        </ol>
+        <p>If the issue still occurs, the tester may reopen the defect with updated evidence. Some teams also use statuses such as Rejected, Duplicate, Deferred or Cannot Reproduce. The exact workflow depends on the organisation and its tracking tool.</p>
+      </Panel>
+      <Panel>
+        <h3>Retesting is not the end of the story</h3>
+        <p>When a fix is delivered, first perform <strong>confirmation testing</strong> (also called retesting): repeat the test that originally exposed the defect to check whether the specific problem has been fixed.</p>
+        <p>Then consider <strong>regression testing</strong>: check related areas to make sure the change has not caused an unintended problem elsewhere. For example, after a transfer amount display fix, check transfer submission, transaction history and confirmation details where relevant.</p>
+        <Callout><strong>Practical habit</strong>Keep the original expected result and evidence. Record the build or version tested, what you retested, the outcome and any related regression checks.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Communicate defects professionally</h3>
+        <ul>
+          <li>Describe what you observed, not who you think is responsible.</li>
+          <li>Use factual language and avoid assumptions about the root cause.</li>
+          <li>Provide enough detail for someone else to reproduce the issue.</li>
+          <li>Update the report when new evidence becomes available.</li>
+          <li>If the behaviour is unclear, confirm the requirement before labelling it a defect.</li>
+        </ul>
+        <p>Good defect reporting saves investigation time, improves collaboration and helps teams make informed release decisions.</p>
+      </Panel>
+    </> : isTestDesignLesson ? <>
       <Panel>
         <h3>Choose tests that give you useful coverage</h3>
         <p>Test design techniques help you select effective test cases without trying every possible combination. Imagine a banking app that accepts transfers between R10 and R50,000, applies fees based on customer type and changes a payment's status as it moves through processing.</p>
@@ -425,9 +502,13 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
 
     <Panel>
       <h3>Quick knowledge check</h3>
-      <p>{isTestDesignLesson ? "A transfer amount must be between R10 and R50,000. Which technique is most useful for selecting representative values from valid and invalid input groups?" : isTestCasesLesson ? "A transfer requirement allows amounts from R10 to R50,000. Which set of values is most useful for checking the lower boundary?" : isRequirementsLesson ? "A user story says customers can add beneficiaries. One acceptance criterion says: \"The system should be easy to use.\" What should the tester do?" : isLevelsTypesLesson ? "A developer has fixed a defect in the transfer fee calculation. The tester reruns the exact test that originally failed to confirm the fix. What is this called?" : isPrinciplesLesson ? "A tester has run the same successful payment test every day for several weeks, but it has not revealed any new defects. Which principle suggests the tester should review and expand the tests?" : isStlcLesson ? "A tester has executed a transfer test and found that the app sends R5,000 instead of the expected R500. What should happen next?" : isSdlcLesson ? "A tester reviews a user story and notices that the payment failure behaviour is not explained. Developers have not started coding yet. What is the best action?" : isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?"}</p>
+      <p>{isDefectLesson ? "A tester reports that a transfer confirmation displays R5,000 instead of the R500 entered. Which information is most important to help the developer reproduce and investigate the defect?" : isTestDesignLesson ? "A transfer amount must be between R10 and R50,000. Which technique is most useful for selecting representative values from valid and invalid input groups?" : isTestCasesLesson ? "A transfer requirement allows amounts from R10 to R50,000. Which set of values is most useful for checking the lower boundary?" : isRequirementsLesson ? "A user story says customers can add beneficiaries. One acceptance criterion says: \"The system should be easy to use.\" What should the tester do?" : isLevelsTypesLesson ? "A developer has fixed a defect in the transfer fee calculation. The tester reruns the exact test that originally failed to confirm the fix. What is this called?" : isPrinciplesLesson ? "A tester has run the same successful payment test every day for several weeks, but it has not revealed any new defects. Which principle suggests the tester should review and expand the tests?" : isStlcLesson ? "A tester has executed a transfer test and found that the app sends R5,000 instead of the expected R500. What should happen next?" : isSdlcLesson ? "A tester reviews a user story and notices that the payment failure behaviour is not explained. Developers have not started coding yet. What is the best action?" : isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?"}</p>
       <Question>
-        {isTestDesignLesson ? <>
+        {isDefectLesson ? <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. The tester’s opinion about which developer caused the issue.</Option>
+          <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Clear reproduction steps, test data, expected and actual results, environment and relevant evidence.</Option>
+          <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Only the word “broken” and a screenshot with no context.</Option>
+        </> : isTestDesignLesson ? <>
           <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. State transition testing</Option>
           <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Equivalence partitioning</Option>
           <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Exploratory testing only</Option>
@@ -461,7 +542,7 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
           <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. To guarantee that the application will never fail.</Option>
         </>}
       </Question>
-      {answer !== null && <Feedback $correct={correctAnswer}>{correctAnswer ? (isTestDesignLesson ? "Correct. Equivalence partitioning groups values expected to behave similarly, then uses representative values from each group. Boundary value analysis complements it by checking values around the limits." : isTestCasesLesson ? "Correct. Boundary-value testing checks values just below, at and just above a limit. This helps reveal errors in how the system handles the edge of an allowed range." : isRequirementsLesson ? "Correct. Vague criteria are difficult to verify consistently. The team should agree on clear, observable expectations before treating the story as testable." : isLevelsTypesLesson ? "Correct. Confirmation testing repeats the test that exposed the defect to check that the specific fix works. Regression testing checks for unintended side effects elsewhere." : isPrinciplesLesson ? "Correct. Repeating the same tests can become less effective over time. Improve the test suite with new scenarios, data and exploratory checks." : isStlcLesson ? "Exactly. Record the failure clearly, report it for investigation and retest once a fix is available." : isSdlcLesson ? "Exactly. Clarifying requirements early helps prevent misunderstandings from becoming defects later. Testing contributes before code is written." : isQualityLesson ? "Exactly. A product can work functionally and still be poor quality if it puts customer information at risk." : "That's right. Testing checks expected and unexpected behaviour, helps reveal defects and provides information about risk.") : (isTestDesignLesson ? "Not quite. The question asks for a technique that divides input data into groups expected to behave alike. Boundary value analysis focuses specifically on values at and around limits." : isTestCasesLesson ? "Not quite. The most useful boundary checks are immediately below the minimum, exactly at the minimum and immediately above it. Testing only ordinary values may miss boundary defects." : isRequirementsLesson ? "Not quite. The phrase is subjective and does not tell the tester what result to observe. Ask the team to define specific, verifiable expectations." : isLevelsTypesLesson ? "Not quite. The question describes repeating the original failed test to verify one particular fix. Regression testing has a broader purpose: checking for side effects." : isPrinciplesLesson ? "Not quite. The clue is that repeating the same tests stops revealing new information. Which principle says tests need to be refreshed?" : isStlcLesson ? "A failed test should be documented with evidence and raised as a defect so the team can investigate and verify a fix." : isSdlcLesson ? "Not quite. Think about when the team can most easily clarify an unclear requirement — before or after implementation?" : isQualityLesson ? "Not quite. Think about the different dimensions of quality. Correct payment processing does not make an exposure of private information acceptable." : "Not quite. Think about what the tester is trying to learn by checking normal use and unusual input. Testing cannot guarantee that software will never fail.")}</Feedback>}
+      {answer !== null && <Feedback $correct={correctAnswer}>{correctAnswer ? (isDefectLesson ? "Correct. A useful defect report gives the team reproducible steps, relevant context and clear expected-versus-actual results, supported by appropriate evidence." : isTestDesignLesson ? "Correct. Equivalence partitioning groups values expected to behave similarly, then uses representative values from each group. Boundary value analysis complements it by checking values around the limits." : isTestCasesLesson ? "Correct. Boundary-value testing checks values just below, at and just above a limit. This helps reveal errors in how the system handles the edge of an allowed range." : isRequirementsLesson ? "Correct. Vague criteria are difficult to verify consistently. The team should agree on clear, observable expectations before treating the story as testable." : isLevelsTypesLesson ? "Correct. Confirmation testing repeats the test that exposed the defect to check that the specific fix works. Regression testing checks for unintended side effects elsewhere." : isPrinciplesLesson ? "Correct. Repeating the same tests can become less effective over time. Improve the test suite with new scenarios, data and exploratory checks." : isStlcLesson ? "Exactly. Record the failure clearly, report it for investigation and retest once a fix is available." : isSdlcLesson ? "Exactly. Clarifying requirements early helps prevent misunderstandings from becoming defects later. Testing contributes before code is written." : isQualityLesson ? "Exactly. A product can work functionally and still be poor quality if it puts customer information at risk." : "That's right. Testing checks expected and unexpected behaviour, helps reveal defects and provides information about risk.") : (isDefectLesson ? "Not quite. The team needs enough context to repeat the issue and compare what happened with what should have happened. A label or uncontextualised screenshot is not enough." : isTestDesignLesson ? "Not quite. The question asks for a technique that divides input data into groups expected to behave alike. Boundary value analysis focuses specifically on values at and around limits." : isTestCasesLesson ? "Not quite. The most useful boundary checks are immediately below the minimum, exactly at the minimum and immediately above it. Testing only ordinary values may miss boundary defects." : isRequirementsLesson ? "Not quite. The phrase is subjective and does not tell the tester what result to observe. Ask the team to define specific, verifiable expectations." : isLevelsTypesLesson ? "Not quite. The question describes repeating the original failed test to verify one particular fix. Regression testing has a broader purpose: checking for side effects." : isPrinciplesLesson ? "Not quite. The clue is that repeating the same tests stops revealing new information. Which principle says tests need to be refreshed?" : isStlcLesson ? "A failed test should be documented with evidence and raised as a defect so the team can investigate and verify a fix." : isSdlcLesson ? "Not quite. Think about when the team can most easily clarify an unclear requirement — before or after implementation?" : isQualityLesson ? "Not quite. Think about the different dimensions of quality. Correct payment processing does not make an exposure of private information acceptable." : "Not quite. Think about what the tester is trying to learn by checking normal use and unusual input. Testing cannot guarantee that software will never fail.")}</Feedback>}
     </Panel>
 
     <Actions>
