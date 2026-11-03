@@ -14,7 +14,7 @@ const Feedback = styled.div<{ $correct: boolean }>(({ $correct }) => ({ padding:
 const Actions = styled.div({ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" });
 const Button = styled.button<{ $primary?: boolean }>(({ $primary }) => ({ border: "1px solid " + ($primary ? "#4b8cf5" : "#2b3b53"), background: $primary ? "#3479e7" : "#142136", color: $primary ? "#fff" : "#b7c7dc", padding: "10px 14px", borderRadius: 8, fontSize: 11, fontWeight: 700, cursor: "pointer", opacity: 1, "&:disabled": { opacity: .45, cursor: "not-allowed" } }));
 
-type Props = { lessonId: "what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles"; onBack: () => void; onComplete: () => void };
+type Props = { lessonId: "what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles" | "test-levels-types"; onBack: () => void; onComplete: () => void };
 
 export function LessonView({ lessonId, onBack, onComplete }: Props) {
   const [answer, setAnswer] = useState<number | null>(null);
@@ -23,20 +23,68 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
   const isSdlcLesson = lessonId === "software-development-lifecycle";
   const isStlcLesson = lessonId === "software-testing-lifecycle";
   const isPrinciplesLesson = lessonId === "testing-principles";
+  const isLevelsTypesLesson = lessonId === "test-levels-types";
   const correctIndex = isQualityLesson ? 2 : 1;
   const correctAnswer = answer === correctIndex;
-  const title = isPrinciplesLesson ? "Testing Principles" : isStlcLesson ? "The Software Testing Lifecycle (STLC)" : isSdlcLesson ? "The Software Development Lifecycle (SDLC)" : isQualityLesson ? "Why Quality Matters" : "What is Software Testing?";
+  const title = isLevelsTypesLesson ? "Test Levels and Test Types" : isPrinciplesLesson ? "Testing Principles" : isStlcLesson ? "The Software Testing Lifecycle (STLC)" : isSdlcLesson ? "The Software Development Lifecycle (SDLC)" : isQualityLesson ? "Why Quality Matters" : "What is Software Testing?";
 
   return <Page>
     <Back onClick={onBack}>← Back to Software Testing Fundamentals</Back>
     <Hero>
-      <Eyebrow>Software Testing Fundamentals · Lesson {isPrinciplesLesson ? "05" : isStlcLesson ? "04" : isSdlcLesson ? "03" : isQualityLesson ? "02" : "01"}</Eyebrow>
+      <Eyebrow>Software Testing Fundamentals · Lesson {isLevelsTypesLesson ? "06" : isPrinciplesLesson ? "05" : isStlcLesson ? "04" : isSdlcLesson ? "03" : isQualityLesson ? "02" : "01"}</Eyebrow>
       <h2>{title}</h2>
-      <p>{isPrinciplesLesson ? "Explore seven foundational principles that guide effective testing and help testers make better decisions." : isStlcLesson ? "Follow the testing process from understanding requirements through planning, execution, defect handling and closure." : isSdlcLesson ? "Follow a software product from its first idea to release and ongoing improvement — and see where testing fits at every stage." : isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use."}</p>
+      <p>{isLevelsTypesLesson ? "Understand the different layers and purposes of testing, and learn how they work together to build confidence in a product." : isPrinciplesLesson ? "Explore seven foundational principles that guide effective testing and help testers make better decisions." : isStlcLesson ? "Follow the testing process from understanding requirements through planning, execution, defect handling and closure." : isSdlcLesson ? "Follow a software product from its first idea to release and ongoing improvement — and see where testing fits at every stage." : isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use."}</p>
       <Meta><span>◷ 8–10 minutes</span><span>◈ Beginner</span><span>◇ Concept + knowledge check</span></Meta>
     </Hero>
 
-    {isPrinciplesLesson ? <>
+    {isLevelsTypesLesson ? <>
+      <Panel>
+        <h3>Not all testing happens at the same level</h3>
+        <p>Imagine a banking app that lets customers transfer money. A developer may check a small calculation, a team may check how the app talks to the payment service, and testers may verify the complete transfer journey from the customer's screen to the final confirmation.</p>
+        <p>These are different <strong>test levels</strong>. Each level looks at the software from a different scope and helps find different kinds of problems.</p>
+        <Callout><strong>Key idea</strong>Test levels describe where or at what scope testing is performed. Test types describe what quality characteristic or behaviour is being checked, or the purpose of a test.</Callout>
+      </Panel>
+      <Panel>
+        <h3>The four commonly used test levels</h3>
+        <ol>
+          <li><strong>Unit testing:</strong> Checks a small, isolated piece of code, such as a function that calculates a transfer fee. Usually performed by developers, often with automated tests.</li>
+          <li><strong>Integration testing:</strong> Checks whether components or systems work correctly together. For example, does the banking app send the correct payment request to the payment service, and handle its response properly?</li>
+          <li><strong>System testing:</strong> Checks the complete integrated application against its requirements. For example, can a customer log in, select a beneficiary, submit a transfer and receive the correct result?</li>
+          <li><strong>Acceptance testing:</strong> Evaluates whether the solution is ready for its intended use and meets business or user needs. Business representatives or intended users may help confirm that the transfer journey supports the real business process.</li>
+        </ol>
+        <Callout><strong>Remember</strong>These levels are related, but they are not simply job titles. Developers, testers, business analysts and users may all contribute depending on the team and context.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Functional and non-functional testing</h3>
+        <p>Test types can also focus on different aspects of quality:</p>
+        <ul>
+          <li><strong>Functional testing:</strong> Checks what the system does. Does a valid transfer debit the correct account, credit the intended beneficiary and show the right confirmation?</li>
+          <li><strong>Non-functional testing:</strong> Checks how well the system operates. Does the transfer journey respond within agreed performance targets? Is customer information protected? Can users with accessibility needs complete the journey?</li>
+        </ul>
+        <p>Functional and non-functional testing are not competing alternatives. A feature needs to behave correctly and provide an acceptable level of quality.</p>
+      </Panel>
+      <Panel>
+        <h3>Confirmation testing and regression testing</h3>
+        <p>Imagine a defect caused the app to display the wrong transfer fee. A developer fixes the calculation. What should the tester do?</p>
+        <ul>
+          <li><strong>Confirmation testing (retesting):</strong> Run the test that originally exposed the defect again to confirm the specific issue has been fixed.</li>
+          <li><strong>Regression testing:</strong> Run relevant tests to check that the change has not caused problems in existing functionality. For example, verify that transfer limits, balances and payment confirmations still work.</li>
+        </ul>
+        <Callout><strong>Easy way to remember</strong>Retesting asks: “Did this particular fix work?” Regression testing asks: “Did the change break anything else?”</Callout>
+      </Panel>
+      <Panel>
+        <h3>How the pieces fit together</h3>
+        <p>One feature can be tested at several levels and with several test types. For a money transfer:</p>
+        <ul>
+          <li>At unit level, check the transfer fee calculation.</li>
+          <li>At integration level, check communication with the payment service.</li>
+          <li>At system level, check the complete transfer journey.</li>
+          <li>At acceptance level, check that the journey meets the business and customer need.</li>
+          <li>Across those levels, consider functional behaviour as well as security, performance and accessibility.</li>
+        </ul>
+        <p>The right combination depends on the feature, the risks and the product. Testing is most useful when the team chooses coverage deliberately rather than assuming one test level is enough.</p>
+      </Panel>
+    </> : isPrinciplesLesson ? <>
       <Panel>
         <h3>Why do testers need principles?</h3>
         <p>Imagine you are testing a banking app. You have checked the login screen, transferred money successfully and confirmed that the balance updates. Does that prove the whole application is free of defects?</p>
@@ -214,9 +262,13 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
 
     <Panel>
       <h3>Quick knowledge check</h3>
-      <p>{isPrinciplesLesson ? "A tester has run the same successful payment test every day for several weeks, but it has not revealed any new defects. Which principle suggests the tester should review and expand the tests?" : isStlcLesson ? "A tester has executed a transfer test and found that the app sends R5,000 instead of the expected R500. What should happen next?" : isSdlcLesson ? "A tester reviews a user story and notices that the payment failure behaviour is not explained. Developers have not started coding yet. What is the best action?" : isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?"}</p>
+      <p>{isLevelsTypesLesson ? "A developer has fixed a defect in the transfer fee calculation. The tester reruns the exact test that originally failed to confirm the fix. What is this called?" : isPrinciplesLesson ? "A tester has run the same successful payment test every day for several weeks, but it has not revealed any new defects. Which principle suggests the tester should review and expand the tests?" : isStlcLesson ? "A tester has executed a transfer test and found that the app sends R5,000 instead of the expected R500. What should happen next?" : isSdlcLesson ? "A tester reviews a user story and notices that the payment failure behaviour is not explained. Developers have not started coding yet. What is the best action?" : isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?"}</p>
       <Question>
-        {isPrinciplesLesson ? <>
+        {isLevelsTypesLesson ? <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. Regression testing</Option>
+          <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Confirmation testing (retesting)</Option>
+          <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Acceptance testing</Option>
+        </> : isPrinciplesLesson ? <>
           <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. Exhaustive testing is possible.</Option>
           <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Tests wear out (the pesticide paradox).</Option>
           <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Defects cluster together.</Option>
@@ -234,7 +286,7 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
           <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. To guarantee that the application will never fail.</Option>
         </>}
       </Question>
-      {answer !== null && <Feedback $correct={correctAnswer}>{correctAnswer ? (isPrinciplesLesson ? "Correct. Repeating the same tests can become less effective over time. Improve the test suite with new scenarios, data and exploratory checks." : isStlcLesson ? "Exactly. Record the failure clearly, report it for investigation and retest once a fix is available." : isSdlcLesson ? "Exactly. Clarifying requirements early helps prevent misunderstandings from becoming defects later. Testing contributes before code is written." : isQualityLesson ? "Exactly. A product can work functionally and still be poor quality if it puts customer information at risk." : "That's right. Testing checks expected and unexpected behaviour, helps reveal defects and provides information about risk.") : (isPrinciplesLesson ? "Not quite. The clue is that repeating the same tests stops revealing new information. Which principle says tests need to be refreshed?" : isStlcLesson ? "A failed test should be documented with evidence and raised as a defect so the team can investigate and verify a fix." : isSdlcLesson ? "Not quite. Think about when the team can most easily clarify an unclear requirement — before or after implementation?" : isQualityLesson ? "Not quite. Think about the different dimensions of quality. Correct payment processing does not make an exposure of private information acceptable." : "Not quite. Think about what the tester is trying to learn by checking normal use and unusual input. Testing cannot guarantee that software will never fail.")}</Feedback>}
+      {answer !== null && <Feedback $correct={correctAnswer}>{correctAnswer ? (isLevelsTypesLesson ? "Correct. Confirmation testing repeats the test that exposed the defect to check that the specific fix works. Regression testing checks for unintended side effects elsewhere." : isPrinciplesLesson ? "Correct. Repeating the same tests can become less effective over time. Improve the test suite with new scenarios, data and exploratory checks." : isStlcLesson ? "Exactly. Record the failure clearly, report it for investigation and retest once a fix is available." : isSdlcLesson ? "Exactly. Clarifying requirements early helps prevent misunderstandings from becoming defects later. Testing contributes before code is written." : isQualityLesson ? "Exactly. A product can work functionally and still be poor quality if it puts customer information at risk." : "That's right. Testing checks expected and unexpected behaviour, helps reveal defects and provides information about risk.") : (isLevelsTypesLesson ? "Not quite. The question describes repeating the original failed test to verify one particular fix. Regression testing has a broader purpose: checking for side effects." : isPrinciplesLesson ? The clue is that repeating the same tests stops revealing new information. Which principle says tests need to be refreshed?" : isStlcLesson ? "A failed test should be documented with evidence and raised as a defect so the team can investigate and verify a fix." : isSdlcLesson ? "Not quite. Think about when the team can most easily clarify an unclear requirement — before or after implementation?" : isQualityLesson ? "Not quite. Think about the different dimensions of quality. Correct payment processing does not make an exposure of private information acceptable." : "Not quite. Think about what the tester is trying to learn by checking normal use and unusual input. Testing cannot guarantee that software will never fail.")}</Feedback>}
     </Panel>
 
     <Actions>
