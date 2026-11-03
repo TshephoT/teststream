@@ -87,7 +87,8 @@ const LessonLink = styled.button({ border: 0, padding: 0, background: "transpare
 
 export function LearningPath() {
   const [expanded, setExpanded] = useState("fundamentals");
-  const [showLesson, setShowLesson] = useState(false);\n  const [activeLesson, setActiveLesson] = useState<"what-is-testing" | "why-quality-matters">("what-is-testing");
+  const [showLesson, setShowLesson] = useState(false);
+  const [activeLesson, setActiveLesson] = useState<"what-is-testing" | "why-quality-matters">("what-is-testing");
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   if (showLesson) return <LessonView lessonId={activeLesson} onBack={() => setShowLesson(false)} onComplete={() => setCompletedLessons(current => current.includes(activeLesson) ? current : [...current, activeLesson])} />;
   return <>
