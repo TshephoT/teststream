@@ -49,7 +49,10 @@ const IntroCard = styled.div({
 const Header = styled.div({ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, margin: "25px 0 13px", color: "#e8f0fc", fontSize: 13, fontWeight: 700, span: { fontSize: 10, color: "#8194ae", fontWeight: 500 } });
 const Stack = styled.div({ display: "grid", gap: 12 });
 const Card = styled.section<{ $active: boolean }>(({ $active }) => ({
-  border: \`1px solid \${$active ? "#426da3" : "#263750"}\`, borderRadius: 12, background: "#111d2e", overflow: "hidden",
+  border: "1px solid " + ($active ? "#426da3" : "#263750"),
+  borderRadius: 12,
+  background: "#111d2e",
+  overflow: "hidden",
   boxShadow: $active ? "0 8px 28px #07142655" : "none"
 }));
 const CardButton = styled.button({
