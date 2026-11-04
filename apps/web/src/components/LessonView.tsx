@@ -1,0 +1,592 @@
+import { useState } from "react";
+import styled from "styled-components";
+
+const Page = styled.div({ display: "grid", gap: 18, maxWidth: 940 });
+const Back = styled.button({ justifySelf: "start", border: 0, padding: 0, background: "transparent", color: "#8ebaff", fontSize: 11, cursor: "pointer" });
+const Hero = styled.section({ padding: "24px 26px", border: "1px solid #29466b", borderRadius: 13, background: "linear-gradient(115deg,#172e4d,#142238)", h2: { margin: "8px 0", color: "#f0f6ff", fontSize: 24, letterSpacing: "-.7px" }, p: { margin: 0, maxWidth: 720, color: "#a4b6ce", fontSize: 12, lineHeight: 1.7 } });
+const Eyebrow = styled.div({ color: "#85b5ff", fontSize: 10, fontWeight: 800, letterSpacing: "1.3px", textTransform: "uppercase" });
+const Meta = styled.div({ display: "flex", gap: 16, marginTop: 15, color: "#91a6c2", fontSize: 10 });
+const Panel = styled.section({ padding: "20px 22px", border: "1px solid #263750", borderRadius: 12, background: "#111d2e", h3: { margin: "0 0 10px", color: "#eaf2ff", fontSize: 15 }, p: { margin: "8px 0", color: "#a4b5cc", fontSize: 12, lineHeight: 1.8 }, "ul,ol": { margin: "10px 0", paddingLeft: 20, color: "#a4b5cc", fontSize: 12, lineHeight: 1.9 } });
+const Callout = styled.div({ padding: "14px 16px", border: "1px solid #31547e", borderRadius: 9, background: "#142943", color: "#b8cce5", fontSize: 12, lineHeight: 1.75, strong: { display: "block", color: "#a9caff", marginBottom: 5, fontSize: 10, letterSpacing: ".6px", textTransform: "uppercase" } });
+const Question = styled.div({ display: "grid", gap: 9, marginTop: 14 });
+const Option = styled.button<{ $selected: boolean; $correct?: boolean }>(({ $selected, $correct }) => ({ width: "100%", padding: "12px 14px", borderRadius: 9, textAlign: "left", border: "1px solid " + ($selected ? ($correct ? "#368565" : "#426da3") : "#2b3d56"), background: $selected ? ($correct ? "#17382f" : "#172b45") : "#142136", color: "#d6e3f4", fontSize: 11, cursor: "pointer" }));
+const Feedback = styled.div<{ $correct: boolean }>(({ $correct }) => ({ padding: 12, borderRadius: 9, background: $correct ? "#17382f" : "#382a25", color: $correct ? "#a4e0c2" : "#edc2a7", fontSize: 11, lineHeight: 1.6 }));
+const Actions = styled.div({ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" });
+const Button = styled.button<{ $primary?: boolean }>(({ $primary }) => ({ border: "1px solid " + ($primary ? "#4b8cf5" : "#2b3b53"), background: $primary ? "#3479e7" : "#142136", color: $primary ? "#fff" : "#b7c7dc", padding: "10px 14px", borderRadius: 8, fontSize: 11, fontWeight: 700, cursor: "pointer", opacity: 1, "&:disabled": { opacity: .45, cursor: "not-allowed" } }));
+
+type Props = { lessonId: "what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles" | "test-levels-types" | "requirements-acceptance-criteria" | "test-scenarios-test-cases" | "test-design-techniques" | "defect-reporting-lifecycle" | "practical-testing-exercise"; onBack: () => void; onComplete: () => void };
+
+export function LessonView({ lessonId, onBack, onComplete }: Props) {
+  const [answer, setAnswer] = useState<number | null>(null);
+  const [completed, setCompleted] = useState(false);
+  const isQualityLesson = lessonId === "why-quality-matters";
+  const isSdlcLesson = lessonId === "software-development-lifecycle";
+  const isStlcLesson = lessonId === "software-testing-lifecycle";
+  const isPrinciplesLesson = lessonId === "testing-principles";
+  const isLevelsTypesLesson = lessonId === "test-levels-types";
+  const isRequirementsLesson = lessonId === "requirements-acceptance-criteria";
+  const isTestCasesLesson = lessonId === "test-scenarios-test-cases";
+  const isTestDesignLesson = lessonId === "test-design-techniques";
+  const isDefectLesson = lessonId === "defect-reporting-lifecycle";
+  const isCapstoneLesson = lessonId === "practical-testing-exercise";
+  const correctIndex = isQualityLesson ? 2 : 1;
+  const correctAnswer = answer === correctIndex;
+  const title = isCapstoneLesson ? "Putting It All Together: A Practical Testing Exercise" : isDefectLesson ? "Defect Reporting and the Defect Lifecycle" : isTestDesignLesson ? "Test Design Techniques" : isTestCasesLesson ? "Test Scenarios and Test Cases" : isRequirementsLesson ? "Understanding Requirements and Acceptance Criteria" : isLevelsTypesLesson ? "Test Levels and Test Types" : isPrinciplesLesson ? "Testing Principles" : isStlcLesson ? "The Software Testing Lifecycle (STLC)" : isSdlcLesson ? "The Software Development Lifecycle (SDLC)" : isQualityLesson ? "Why Quality Matters" : "What is Software Testing?";
+
+  return <Page>
+    <Back onClick={onBack}>← Back to Software Testing Fundamentals</Back>
+    <Hero>
+      <Eyebrow>Software Testing Fundamentals · Lesson {isCapstoneLesson ? "11" : isDefectLesson ? "10" : isTestDesignLesson ? "09" : isTestCasesLesson ? "08" : isRequirementsLesson ? "07" : isLevelsTypesLesson ? "06" : isPrinciplesLesson ? "05" : isStlcLesson ? "04" : isSdlcLesson ? "03" : isQualityLesson ? "02" : "01"}</Eyebrow>
+      <h2>{title}</h2>
+      <p>{isCapstoneLesson ? "Bring the fundamentals together by testing a realistic money-transfer feature from requirements review through test design, execution and defect reporting." : isDefectLesson ? "Learn to write clear defect reports, distinguish severity from priority and follow defects through investigation, fixing and verification." : isTestDesignLesson ? "Learn structured techniques for selecting effective test cases, including equivalence partitions, boundaries, decision tables and state transitions." : isTestCasesLesson ? "Turn requirements into focused test scenarios and detailed test cases, with practical examples of test data, expected results and boundary checks." : isRequirementsLesson ? "Learn how to read requirements, ask useful questions and turn acceptance criteria into clear, testable expectations." : isLevelsTypesLesson ? "Understand the different layers and purposes of testing, and learn how they work together to build confidence in a product." : isPrinciplesLesson ? "Explore seven foundational principles that guide effective testing and help testers make better decisions." : isStlcLesson ? "Follow the testing process from understanding requirements through planning, execution, defect handling and closure." : isSdlcLesson ? "Follow a software product from its first idea to release and ongoing improvement — and see where testing fits at every stage." : isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use."}</p>
+      <Meta><span>◷ {isCapstoneLesson ? "15–20 minutes" : "8–10 minutes"}</span><span>◈ Beginner</span><span>◇ {isCapstoneLesson ? "Practical capstone" : "Concept + knowledge check"}</span></Meta>
+    </Hero>
+
+    {isCapstoneLesson ? <>
+      <Panel><h3>Your assignment: test a money-transfer feature</h3>
+        <p>You are joining a team preparing a new transfer feature for release. Assess the requirement, decide what needs testing, execute checks and communicate any problem you find.</p>
+        <Callout><strong>Feature brief</strong>A logged-in customer can transfer money to an active, saved beneficiary from an active account. The amount must be between R10.00 and R50,000.00 inclusive. The account must have enough available balance. A successful submission creates a unique reference and displays the submitted amount and beneficiary. The payment may initially show Processing and later become Successful or Failed.</Callout>
+        <p>Amounts are entered to two decimal places. Assume the test environment provides approved test accounts and beneficiaries. Never use real customer information.</p>
+      </Panel>
+      <Panel><h3>Step 1 — Review the requirement</h3>
+        <p>Identify questions the team should clarify before testing:</p>
+        <ul><li>What message should appear when the balance is insufficient?</li><li>Can a customer submit the same transfer more than once by tapping repeatedly?</li><li>What happens if the network drops after confirmation?</li><li>How should a failed or processing payment appear in transaction history?</li></ul>
+        <Callout><strong>Your task</strong>Write down at least two questions for the product owner. Do not invent expected behaviour where the requirement is silent.</Callout>
+      </Panel>
+      <Panel><h3>Step 2 — Identify test scenarios</h3>
+        <ol><li>Transfer a valid amount to an active beneficiary with sufficient funds.</li><li>Attempt amounts below the minimum and above the maximum.</li><li>Transfer exactly R10.00 and exactly R50,000.00.</li><li>Attempt a transfer with insufficient available balance.</li><li>Attempt a transfer to an inactive beneficiary or from an inactive account.</li><li>Verify the confirmation shows the correct amount, beneficiary and unique reference.</li><li>Verify payment status as it moves from Processing to a final state.</li></ol>
+        <p>These are scenarios, not yet detailed test cases. Expand each with preconditions, data, steps and expected results.</p>
+      </Panel>
+      <Panel><h3>Step 3 — Design focused test cases</h3>
+        <p>For the amount field, apply equivalence partitioning and boundary value analysis:</p>
+        <ul><li>R9.99 — invalid below range.</li><li>R10.00 — valid lower boundary.</li><li>R10.01 — valid just above lower boundary.</li><li>R49,999.99 — valid just below upper boundary.</li><li>R50,000.00 — valid upper boundary.</li><li>R50,000.01 — invalid above range.</li></ul>
+        <p>Use a decision table for combinations of active/inactive account, sufficient/insufficient balance and active/inactive beneficiary. Use state-transition checks for Processing, Successful and Failed.</p>
+        <Callout><strong>Example test case</strong>Precondition: active account, active beneficiary and available balance of R1,000.00. Steps: open Transfers, select the beneficiary, enter R500.00, review and confirm. Expected: transfer accepted, unique reference created, confirmation displays R500.00 and the selected beneficiary.</Callout>
+      </Panel>
+      <Panel><h3>Step 4 — Execute and investigate</h3>
+        <Callout><strong>Observed result</strong>The transfer is accepted and a reference is generated, but the confirmation screen displays R5,000.00 instead of R500.00. Transaction history displays R500.00.</Callout>
+        <p>This is a potential defect because the confirmation does not match the submitted amount. Record the environment, test data, steps, expected result, actual result and evidence. Do not assume the underlying payment amount is wrong until you verify the relevant records.</p>
+      </Panel>
+      <Panel><h3>Step 5 — Report, retest and run regression checks</h3>
+        <p>Use a clear title: <strong>Transfer confirmation displays R5,000.00 after submitting R500.00</strong>.</p>
+        <ol><li>Repeat the original R500.00 test to perform confirmation testing.</li><li>Check other amounts, including the minimum and maximum boundaries.</li><li>Check transaction history and reference details for consistency.</li><li>Verify insufficient-balance and invalid-beneficiary handling still work.</li><li>Record the build tested and the outcome of each check.</li></ol>
+        <Callout><strong>Capstone outcome</strong>You have applied requirements analysis, scenario design, test cases, equivalence partitioning, boundary value analysis, decision tables, state transitions, defect reporting, confirmation testing and regression testing in one workflow.</Callout>
+      </Panel>
+      <Panel><h3>What to put in your QA portfolio</h3>
+        <ul><li>Your clarification questions and identified risks.</li><li>A list of test scenarios.</li><li>At least five detailed test cases with expected results.</li><li>A completed defect report based on the confirmation mismatch.</li><li>A short retest and regression summary.</li></ul>
+        <p>Use fictional test data only. Explain why you selected each test; a smaller, reasoned test set is more valuable than a long unexplained list.</p>
+      </Panel>
+    </> : isDefectLesson ? <>
+      <Panel>
+        <h3>Finding a defect is only the beginning</h3>
+        <p>Imagine testing a banking app and discovering that a customer enters R500, but the confirmation screen displays R5,000. You have found unexpected behaviour, but the team still needs enough information to understand, investigate and fix it.</p>
+        <p>A defect report communicates the difference between what should happen and what actually happened. A useful report helps another person reproduce the issue without having to guess what you did.</p>
+        <Callout><strong>Key idea</strong>A defect report is not just a complaint that something is broken. It is clear, factual evidence that helps the team investigate and make a decision.</Callout>
+      </Panel>
+      <Panel>
+        <h3>What makes a good defect report?</h3>
+        <p>A report should be concise, specific and reproducible. Include the details that help the team understand the problem:</p>
+        <ul>
+          <li><strong>Title:</strong> A short summary of the problem and where it occurs.</li>
+          <li><strong>Environment:</strong> Application version, device or browser, operating system and test environment where relevant.</li>
+          <li><strong>Preconditions:</strong> Relevant account state, permissions, setup or data needed before reproducing the issue.</li>
+          <li><strong>Steps to reproduce:</strong> Numbered actions that another person can follow.</li>
+          <li><strong>Test data:</strong> The values or records used, while protecting sensitive information.</li>
+          <li><strong>Expected result:</strong> What should happen according to the requirement.</li>
+          <li><strong>Actual result:</strong> What happened instead.</li>
+          <li><strong>Evidence:</strong> Screenshots, screen recordings, logs, request and response details or timestamps, where appropriate.</li>
+        </ul>
+        <Callout><strong>Protect customer information</strong>Never include real passwords, PINs, full card details or unnecessary personal information in a defect report. Use approved test data and follow your organisation's data-handling rules.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Example: a useful banking defect</h3>
+        <Callout><strong>Title</strong>Transfer confirmation displays R5,000 when customer submits R500</Callout>
+        <p><strong>Environment:</strong> QA environment, Android app version 2.4.1.</p>
+        <p><strong>Precondition:</strong> Test customer is logged in and has sufficient available funds.</p>
+        <p><strong>Steps to reproduce:</strong></p>
+        <ol><li>Open Transfers.</li><li>Select a valid saved beneficiary.</li><li>Enter R500 as the transfer amount.</li><li>Review and confirm the transfer.</li></ol>
+        <p><strong>Expected result:</strong> The confirmation displays a transfer amount of R500.</p>
+        <p><strong>Actual result:</strong> The confirmation displays R5,000.</p>
+        <p><strong>Evidence:</strong> Attach a screenshot or recording, a timestamp and relevant transaction reference from the test environment.</p>
+        <p>This report gives the team a starting point to reproduce and investigate the problem. Do not claim that money was actually transferred unless you have verified that separately.</p>
+      </Panel>
+      <Panel>
+        <h3>Severity and priority are different</h3>
+        <p>These terms are related, but they answer different questions:</p>
+        <ul>
+          <li><strong>Severity:</strong> How serious is the impact of the defect on the system or user?</li>
+          <li><strong>Priority:</strong> How urgently should the team address it?</li>
+        </ul>
+        <p>A defect that exposes customer financial information may have very high severity and high priority. A small visual issue on a rarely used page may have low severity, although a business deadline or public launch could still make its priority higher.</p>
+        <p>Severity and priority are usually agreed with the team according to business impact, risk and release context. Do not assume that every organisation uses identical labels or definitions.</p>
+        <Callout><strong>Remember</strong>Severity describes impact. Priority describes urgency. A serious defect is not automatically the next item in every team's work queue, and a seemingly small issue can become urgent in the right context.</Callout>
+      </Panel>
+      <Panel>
+        <h3>The defect lifecycle</h3>
+        <p>A defect moves through a workflow as people investigate it, fix it and verify the result. A common example is:</p>
+        <ol>
+          <li><strong>New / Open:</strong> The tester records the defect and submits it for review.</li>
+          <li><strong>Triaged:</strong> The team reviews the report, confirms its validity and agrees on severity, priority and ownership.</li>
+          <li><strong>Assigned:</strong> The defect is assigned to someone to investigate.</li>
+          <li><strong>In progress:</strong> The developer or responsible team member works on a fix.</li>
+          <li><strong>Fixed / Resolved:</strong> A change has been made and is ready for verification.</li>
+          <li><strong>Retest:</strong> The tester repeats the relevant checks in an environment containing the fix.</li>
+          <li><strong>Closed:</strong> The tester confirms the reported issue is resolved and closes it according to the team's workflow.</li>
+        </ol>
+        <p>If the issue still occurs, the tester may reopen the defect with updated evidence. Some teams also use statuses such as Rejected, Duplicate, Deferred or Cannot Reproduce. The exact workflow depends on the organisation and its tracking tool.</p>
+      </Panel>
+      <Panel>
+        <h3>Retesting is not the end of the story</h3>
+        <p>When a fix is delivered, first perform <strong>confirmation testing</strong> (also called retesting): repeat the test that originally exposed the defect to check whether the specific problem has been fixed.</p>
+        <p>Then consider <strong>regression testing</strong>: check related areas to make sure the change has not caused an unintended problem elsewhere. For example, after a transfer amount display fix, check transfer submission, transaction history and confirmation details where relevant.</p>
+        <Callout><strong>Practical habit</strong>Keep the original expected result and evidence. Record the build or version tested, what you retested, the outcome and any related regression checks.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Communicate defects professionally</h3>
+        <ul>
+          <li>Describe what you observed, not who you think is responsible.</li>
+          <li>Use factual language and avoid assumptions about the root cause.</li>
+          <li>Provide enough detail for someone else to reproduce the issue.</li>
+          <li>Update the report when new evidence becomes available.</li>
+          <li>If the behaviour is unclear, confirm the requirement before labelling it a defect.</li>
+        </ul>
+        <p>Good defect reporting saves investigation time, improves collaboration and helps teams make informed release decisions.</p>
+      </Panel>
+    </> : isTestDesignLesson ? <>
+      <Panel>
+        <h3>Choose tests that give you useful coverage</h3>
+        <p>Test design techniques help you select effective test cases without trying every possible combination. Imagine a banking app that accepts transfers between R10 and R50,000, applies fees based on customer type and changes a payment's status as it moves through processing.</p>
+        <p>Rather than guessing which values and journeys to test, use structured techniques to identify representative cases, important boundaries, combinations and state changes.</p>
+        <Callout><strong>Key idea</strong>Test design techniques help you decide what to test. They make testing more systematic, focused and easier to explain.</Callout>
+      </Panel>
+      <Panel>
+        <h3>1. Equivalence partitioning</h3>
+        <p>Equivalence partitioning divides input data into groups that the system is expected to handle in the same way. You select representative values from each group instead of testing every possible value.</p>
+        <p>For a transfer amount allowed between R10 and R50,000, possible partitions are:</p>
+        <ul><li><strong>Below the minimum:</strong> values less than R10, such as R5.</li><li><strong>Valid range:</strong> values from R10 to R50,000, such as R500.</li><li><strong>Above the maximum:</strong> values greater than R50,000, such as R50,001.</li></ul>
+        <p>A representative value from each partition can help check whether the application accepts or rejects the group correctly. Confirm the actual rules and decimal precision from the requirement.</p>
+      </Panel>
+      <Panel>
+        <h3>2. Boundary value analysis</h3>
+        <p>Defects often appear at the edges of allowed ranges. Boundary value analysis focuses on the minimum and maximum values, and values immediately around them.</p>
+        <p>For a range of R10 to R50,000, useful checks include R9.99, R10, R10.01, R49,999.99, R50,000 and R50,000.01, assuming cents are supported.</p>
+        <Callout><strong>Remember</strong>Equivalence partitioning checks representative groups. Boundary value analysis concentrates on the edges between those groups.</Callout>
+      </Panel>
+      <Panel>
+        <h3>3. Decision table testing</h3>
+        <p>Use a decision table when the outcome depends on combinations of conditions. For example, a transfer might be allowed only when the account is active, the balance is sufficient and the beneficiary is valid.</p>
+        <ul><li>Condition 1: Is the account active?</li><li>Condition 2: Is the available balance sufficient?</li><li>Condition 3: Is the beneficiary valid?</li><li>Expected action: Accept the transfer only when all required conditions are true; otherwise show the appropriate rejection.</li></ul>
+        <p>A decision table lays out combinations of these conditions and the expected result for each meaningful rule. It is especially useful when several business rules interact.</p>
+      </Panel>
+      <Panel>
+        <h3>4. State transition testing</h3>
+        <p>Some features behave differently depending on their current state and the event that occurs. State transition testing checks valid state changes and, where appropriate, invalid transitions.</p>
+        <p>A payment could move through states such as:</p>
+        <ol><li><strong>Created:</strong> The customer has submitted the payment.</li><li><strong>Processing:</strong> The payment is being handled.</li><li><strong>Successful:</strong> The payment has completed successfully.</li><li><strong>Failed:</strong> The payment could not be completed.</li></ol>
+        <p>Test that valid events move the payment to the correct next state, that terminal states are handled correctly, and that the system does not allow an invalid transition such as changing a completed payment back to processing without an explicitly defined business rule.</p>
+      </Panel>
+      <Panel>
+        <h3>How to choose a technique</h3>
+        <ul><li>Use <strong>equivalence partitioning</strong> when many input values should behave alike.</li><li>Use <strong>boundary value analysis</strong> when a requirement defines limits or ranges.</li><li>Use <strong>decision tables</strong> when combinations of conditions determine the outcome.</li><li>Use <strong>state transition testing</strong> when behaviour depends on the current state and events.</li></ul>
+        <p>These techniques can be combined. A tester might use partitions and boundaries for the transfer amount, a decision table for eligibility rules, and state transitions to verify payment processing.</p>
+        <Callout><strong>Practical habit</strong>Choose techniques based on the requirement, risk and complexity. You do not need to apply every technique to every feature.</Callout>
+      </Panel>
+    </> : isTestCasesLesson ? <>
+      <Panel>
+        <h3>From requirements to practical checks</h3>
+        <p>In the previous lesson, you learned how requirements and acceptance criteria describe what a product should do. The next step is to decide how to check that behaviour.</p>
+        <p>A <strong>test scenario</strong> describes a situation or behaviour you want to verify. A <strong>test case</strong> turns that scenario into a specific set of conditions, data, actions and expected results.</p>
+        <Callout><strong>Key difference</strong>Scenario: Verify that a customer can transfer money to a valid beneficiary. Test case: Log in as a customer with sufficient funds, transfer R500 to a saved beneficiary, and verify the debit, credit and confirmation.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Identify test scenarios</h3>
+        <p>Start with the acceptance criteria and ask: what could a user do, what could go wrong, and what important conditions could change the outcome?</p>
+        <p>For a banking transfer feature, useful scenarios include:</p>
+        <ul>
+          <li>Transfer money when the account has sufficient funds.</li>
+          <li>Attempt a transfer when the account has insufficient funds.</li>
+          <li>Attempt to transfer to an invalid or inactive beneficiary.</li>
+          <li>Submit a transfer with a zero, negative or above-limit amount.</li>
+          <li>Lose network connectivity while submitting the transfer.</li>
+          <li>Submit the same transfer action more than once and check for duplicate processing.</li>
+        </ul>
+        <Callout><strong>Think beyond the happy path</strong>A positive scenario checks expected use with valid information. Negative scenarios check how the system handles invalid input, unavailable services, missing information or other failure conditions.</Callout>
+      </Panel>
+      <Panel>
+        <h3>What belongs in a test case?</h3>
+        <p>A useful test case gives another tester enough information to repeat the check and compare the actual result with the expected result.</p>
+        <ul>
+          <li><strong>Test case ID and title:</strong> A unique reference and a short description of what is being checked.</li>
+          <li><strong>Preconditions:</strong> What must already be true, such as the customer being logged in and having a saved beneficiary.</li>
+          <li><strong>Test data:</strong> The specific values used, such as a transfer amount of R500 and an account balance of R2,000.</li>
+          <li><strong>Steps:</strong> The actions the tester performs, in the correct order.</li>
+          <li><strong>Expected result:</strong> The outcome that should happen after the steps.</li>
+          <li><strong>Actual result and status:</strong> What happened during execution and whether the test passed or failed.</li>
+        </ul>
+        <Callout><strong>Example test case</strong>Title: Transfer R500 to a saved beneficiary<br/>Precondition: Customer is logged in and has R2,000 available.<br/>Test data: Amount R500; beneficiary is valid and active.<br/>Steps: Open Transfers; select the beneficiary; enter R500; review and confirm.<br/>Expected result: The transfer is accepted once, the available balance decreases by R500, and a confirmation with the correct amount and beneficiary is displayed.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Positive, negative and boundary-value tests</h3>
+        <p>Test design is not about writing as many cases as possible. It is about selecting cases that provide useful coverage of the requirement and its risks.</p>
+        <ul>
+          <li><strong>Positive testing:</strong> Use valid data and confirm the intended operation succeeds.</li>
+          <li><strong>Negative testing:</strong> Use invalid or unsuitable data and confirm the system handles it safely and clearly.</li>
+          <li><strong>Boundary-value testing:</strong> Check values at and around the edges of an allowed range, where defects commonly occur.</li>
+        </ul>
+        <p>For example, if the agreed minimum transfer is R10 and the maximum is R50,000, test R10, R9.99, R10.01, R50,000, R50,000.01 and a value comfortably inside the range. The actual limits must come from the requirement.</p>
+        <Callout><strong>Useful habit</strong>Do not invent business rules. If the minimum, maximum, precision or behaviour for an invalid amount is not defined, ask the team to clarify it before finalising the expected result.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Make test cases clear and maintainable</h3>
+        <ul>
+          <li>Keep each test focused on a clear objective.</li>
+          <li>Use specific, realistic test data rather than vague instructions such as “enter a valid amount”.</li>
+          <li>Write steps in the order they should be performed.</li>
+          <li>Describe observable expected results, not assumptions about how the code works.</li>
+          <li>Avoid combining many unrelated checks into one test case.</li>
+          <li>Link test cases back to the requirement or acceptance criterion they cover.</li>
+        </ul>
+        <p>Good test cases help different people repeat the same check consistently, understand failures and see which requirements have been covered.</p>
+      </Panel>
+    </> : isRequirementsLesson ? <>
+      <Panel>
+        <h3>Before you test, understand what should happen</h3>
+        <p>Imagine a banking app introduces a new beneficiary feature. A customer should be able to add someone they trust and later send money to that person. But what information is required? Must the beneficiary be verified? What happens if the account number is invalid?</p>
+        <p>If the team does not agree on the expected behaviour, developers may build one interpretation while testers validate another. Requirements help the team understand what needs to be delivered.</p>
+        <Callout><strong>Key idea</strong>A requirement describes a need, capability or condition that a product or feature must satisfy. Testing uses requirements as a basis for evaluating whether the solution behaves as expected.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Where do requirements come from?</h3>
+        <p>Requirements can come from customers, users, business stakeholders, regulations, existing systems, product strategy and technical constraints. They may be documented in different ways, depending on how a team works.</p>
+        <ul>
+          <li><strong>Business requirements:</strong> Explain the business goal, such as allowing customers to make payments without visiting a branch.</li>
+          <li><strong>User requirements:</strong> Describe what a user needs to achieve, such as adding and managing beneficiaries.</li>
+          <li><strong>Functional requirements:</strong> Describe what the system must do, such as validating an account number before saving a beneficiary.</li>
+          <li><strong>Non-functional requirements:</strong> Describe quality expectations or constraints, such as response time, security, availability and accessibility.</li>
+        </ul>
+        <Callout><strong>Tester mindset</strong>Do not assume a short requirement contains every detail. Look for missing rules, unclear wording, conflicting statements and unanswered questions.</Callout>
+      </Panel>
+      <Panel>
+        <h3>User stories and acceptance criteria</h3>
+        <p>In Agile teams, a requirement may be expressed as a user story. A common format is:</p>
+        <Callout><strong>User story</strong>As a banking customer, I want to add a beneficiary, so that I can make future payments without entering their details every time.</Callout>
+        <p>The story explains who needs something and why. <strong>Acceptance criteria</strong> describe the conditions that must be met for the story to be accepted. They make the expected behaviour clearer and provide a basis for testing.</p>
+        <p>For this story, acceptance criteria might state:</p>
+        <ol>
+          <li>The customer can enter a beneficiary name and account number.</li>
+          <li>The system must reject an account number that does not meet the defined format.</li>
+          <li>A successfully saved beneficiary appears in the customer's beneficiary list.</li>
+          <li>If saving fails, the customer sees a clear message and the beneficiary is not added.</li>
+        </ol>
+      </Panel>
+      <Panel>
+        <h3>What makes acceptance criteria testable?</h3>
+        <p>Good acceptance criteria should be clear, specific, observable and measurable. Avoid vague statements such as “the page must be user-friendly” or “the system should be fast”. Ask what a user should be able to do and what result can be observed.</p>
+        <p>For example, replace “the system should respond quickly” with an agreed measurable target, such as “the beneficiary list should load within two seconds under the defined test conditions”. The actual target must come from the product and business stakeholders, not be invented by the tester.</p>
+        <p>One popular way to express acceptance criteria is <strong>Given / When / Then</strong>:</p>
+        <Callout><strong>Example: successful beneficiary save</strong>Given that the customer is logged in and has entered valid beneficiary details,<br/>When the customer selects Save,<br/>Then the beneficiary is saved and displayed in the beneficiary list.</Callout>
+        <p>This structure describes the starting context, the action and the expected outcome. It helps everyone understand what needs to be checked.</p>
+      </Panel>
+      <Panel>
+        <h3>How testers review requirements</h3>
+        <p>When reviewing a story or requirement, ask questions such as:</p>
+        <ul>
+          <li>Is the expected behaviour clear and unambiguous?</li>
+          <li>Are valid and invalid inputs described?</li>
+          <li>What should happen when a service is unavailable or an action fails?</li>
+          <li>Are permissions, security and data privacy considered?</li>
+          <li>Are limits, boundaries and error messages defined?</li>
+          <li>Can the acceptance criteria be verified through observable results?</li>
+        </ul>
+        <p>If something is unclear, raise the question with the product owner, business analyst or relevant stakeholder before making assumptions. This is an important way testers contribute early in the delivery process.</p>
+      </Panel>
+      <Panel>
+        <h3>From acceptance criteria to test scenarios</h3>
+        <p>Consider the criterion: “The system must reject an account number that does not meet the defined format.” A tester can derive scenarios such as:</p>
+        <ul>
+          <li>Enter a valid account number and confirm it can be saved.</li>
+          <li>Enter an account number that is too short.</li>
+          <li>Enter an account number that is too long.</li>
+          <li>Leave the account number blank.</li>
+          <li>Enter letters or unsupported characters, if the format does not allow them.</li>
+        </ul>
+        <Callout><strong>Remember</strong>Requirements explain what is needed. Acceptance criteria make expected outcomes specific. Test scenarios describe the situations you will check. Test cases add the detailed steps, data and expected results.</Callout>
+      </Panel>
+    </> : isLevelsTypesLesson ? <>
+      <Panel>
+        <h3>Not all testing happens at the same level</h3>
+        <p>Imagine a banking app that lets customers transfer money. A developer may check a small calculation, a team may check how the app talks to the payment service, and testers may verify the complete transfer journey from the customer's screen to the final confirmation.</p>
+        <p>These are different <strong>test levels</strong>. Each level looks at the software from a different scope and helps find different kinds of problems.</p>
+        <Callout><strong>Key idea</strong>Test levels describe where or at what scope testing is performed. Test types describe what quality characteristic or behaviour is being checked, or the purpose of a test.</Callout>
+      </Panel>
+      <Panel>
+        <h3>The four commonly used test levels</h3>
+        <ol>
+          <li><strong>Unit testing:</strong> Checks a small, isolated piece of code, such as a function that calculates a transfer fee. Usually performed by developers, often with automated tests.</li>
+          <li><strong>Integration testing:</strong> Checks whether components or systems work correctly together. For example, does the banking app send the correct payment request to the payment service, and handle its response properly?</li>
+          <li><strong>System testing:</strong> Checks the complete integrated application against its requirements. For example, can a customer log in, select a beneficiary, submit a transfer and receive the correct result?</li>
+          <li><strong>Acceptance testing:</strong> Evaluates whether the solution is ready for its intended use and meets business or user needs. Business representatives or intended users may help confirm that the transfer journey supports the real business process.</li>
+        </ol>
+        <Callout><strong>Remember</strong>These levels are related, but they are not simply job titles. Developers, testers, business analysts and users may all contribute depending on the team and context.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Functional and non-functional testing</h3>
+        <p>Test types can also focus on different aspects of quality:</p>
+        <ul>
+          <li><strong>Functional testing:</strong> Checks what the system does. Does a valid transfer debit the correct account, credit the intended beneficiary and show the right confirmation?</li>
+          <li><strong>Non-functional testing:</strong> Checks how well the system operates. Does the transfer journey respond within agreed performance targets? Is customer information protected? Can users with accessibility needs complete the journey?</li>
+        </ul>
+        <p>Functional and non-functional testing are not competing alternatives. A feature needs to behave correctly and provide an acceptable level of quality.</p>
+      </Panel>
+      <Panel>
+        <h3>Confirmation testing and regression testing</h3>
+        <p>Imagine a defect caused the app to display the wrong transfer fee. A developer fixes the calculation. What should the tester do?</p>
+        <ul>
+          <li><strong>Confirmation testing (retesting):</strong> Run the test that originally exposed the defect again to confirm the specific issue has been fixed.</li>
+          <li><strong>Regression testing:</strong> Run relevant tests to check that the change has not caused problems in existing functionality. For example, verify that transfer limits, balances and payment confirmations still work.</li>
+        </ul>
+        <Callout><strong>Easy way to remember</strong>Retesting asks: “Did this particular fix work?” Regression testing asks: “Did the change break anything else?”</Callout>
+      </Panel>
+      <Panel>
+        <h3>How the pieces fit together</h3>
+        <p>One feature can be tested at several levels and with several test types. For a money transfer:</p>
+        <ul>
+          <li>At unit level, check the transfer fee calculation.</li>
+          <li>At integration level, check communication with the payment service.</li>
+          <li>At system level, check the complete transfer journey.</li>
+          <li>At acceptance level, check that the journey meets the business and customer need.</li>
+          <li>Across those levels, consider functional behaviour as well as security, performance and accessibility.</li>
+        </ul>
+        <p>The right combination depends on the feature, the risks and the product. Testing is most useful when the team chooses coverage deliberately rather than assuming one test level is enough.</p>
+      </Panel>
+    </> : isPrinciplesLesson ? <>
+      <Panel>
+        <h3>Why do testers need principles?</h3>
+        <p>Imagine you are testing a banking app. You have checked the login screen, transferred money successfully and confirmed that the balance updates. Does that prove the whole application is free of defects?</p>
+        <p>No. There may be thousands of other combinations of users, accounts, amounts, devices, network conditions and unexpected actions. Testing principles help us understand what testing can achieve, where its limits are and how to use our time wisely.</p>
+        <Callout><strong>Key idea</strong>Testing principles are guiding ideas that apply across different projects, tools and testing approaches. They help testers make thoughtful decisions rather than simply follow a checklist.</Callout>
+      </Panel>
+      <Panel>
+        <h3>The seven fundamental testing principles</h3>
+        <ol>
+          <li><strong>Testing shows the presence of defects, not their absence.</strong> Testing can reveal defects, but passing tests do not prove that no defects remain. A successful payment test gives evidence about the cases checked, not a guarantee that every payment will work.</li>
+          <li><strong>Exhaustive testing is impossible.</strong> It is usually not practical to test every possible input, path and condition. A transfer feature could have countless combinations of amounts, accounts, balances and network states. Prioritise based on risk and use techniques to select valuable tests.</li>
+          <li><strong>Early testing saves time and money.</strong> Start testing activities as early as possible. Reviewing a payment requirement before development can uncover a missing rule before it becomes code that needs rework.</li>
+          <li><strong>Defects cluster together.</strong> A small number of areas often contain a large proportion of the defects found. If testing repeatedly finds issues in payment processing, that area may deserve more investigation. Do not assume other areas are defect-free.</li>
+          <li><strong>Tests wear out (the pesticide paradox).</strong> Running the same tests repeatedly may eventually stop finding new defects. Review and improve tests, add new scenarios and explore different data and workflows.</li>
+          <li><strong>Testing is context dependent.</strong> The right approach depends on the product, risks, users and environment. A banking payment system needs different levels of control and evidence from a simple personal blog.</li>
+          <li><strong>Absence-of-errors is a fallacy.</strong> Software can have very few known defects and still fail to meet user needs. A payment app that works exactly as specified is not useful if the specification itself misses what customers need.</li>
+        </ol>
+      </Panel>
+      <Panel>
+        <h3>Putting the principles into practice</h3>
+        <p>Suppose a new payment feature is due for release and time is limited. A tester can apply the principles by:</p>
+        <ul>
+          <li>Prioritising high-risk flows such as duplicate payments, incorrect amounts and insufficient funds.</li>
+          <li>Reviewing requirements early and asking questions before implementation is complete.</li>
+          <li>Looking beyond the usual happy-path test cases and varying test data and conditions.</li>
+          <li>Investigating areas where defects have repeatedly appeared, without ignoring the rest of the system.</li>
+          <li>Considering whether the feature solves the customer's actual problem, not just whether it matches the written specification.</li>
+        </ul>
+        <Callout><strong>Remember</strong>Principles guide judgement. They do not replace a test strategy, test design techniques or knowledge of the product.</Callout>
+      </Panel>
+    </> : isStlcLesson ? <>
+      <Panel>
+        <h3>Testing has a lifecycle too</h3>
+        <p>Imagine your team is building a banking app feature that lets customers transfer money. Before testing begins, the team needs to understand the requirements, plan the checks, prepare test data and an environment, and agree how results will be reported.</p>
+        <p>The <strong>Software Testing Lifecycle (STLC)</strong> is the set of activities a testing team carries out to plan, design, execute and complete testing. It gives testing work structure and helps ensure important quality activities are not missed.</p>
+        <Callout><strong>Key idea</strong>The SDLC describes the broader process of building and maintaining software. The STLC focuses on the activities involved in testing that software.</Callout>
+      </Panel>
+      <Panel>
+        <h3>The common phases of the STLC</h3>
+        <ol>
+          <li><strong>Requirement analysis:</strong> Study requirements, identify what can be tested, clarify gaps and note risks. For a transfer feature, clarify limits, fees and failure behaviour.</li>
+          <li><strong>Test planning:</strong> Decide scope, approach, resources, responsibilities, tools, schedule and risks.</li>
+          <li><strong>Test case development:</strong> Create test scenarios and detailed test cases, identify test data and prepare automation where appropriate.</li>
+          <li><strong>Test environment setup:</strong> Prepare the application, services, configurations and test accounts needed to run checks.</li>
+          <li><strong>Test execution:</strong> Run tests, compare actual results with expected results, record evidence and report defects.</li>
+          <li><strong>Test cycle closure:</strong> Summarise coverage, results, outstanding defects, risks and lessons learned for stakeholders.</li>
+        </ol>
+        <Callout><strong>Remember</strong>Teams may use different names or combine phases. In Agile delivery, these activities often repeat for each feature or sprint.</Callout>
+      </Panel>
+      <Panel>
+        <h3>What happens when a test fails?</h3>
+        <p>Suppose a transfer test expects R500 to be sent, but the app displays R5,000. The tester records the steps, test data, expected result, actual result and supporting evidence, then reports the defect.</p>
+        <p>The developer investigates and fixes the issue. The tester performs <strong>retesting</strong> to check the specific fix and may perform <strong>regression testing</strong> to check that related functionality still works.</p>
+        <p>Defect handling can send the team back through execution more than once. Testing is rarely a perfectly straight line.</p>
+      </Panel>
+      <Panel>
+        <h3>How the STLC fits into real teams</h3>
+        <p>Think of the phases as a guide, not a rigid checklist. A small change may need lightweight planning and a few focused checks. A high-risk payment feature may need deeper analysis, more test data and careful reporting.</p>
+        <p>The tester applies the right level of testing for the feature, its users and its risks, while keeping the team informed about progress and findings.</p>
+      </Panel>
+    </>: isSdlcLesson ? <>
+      <Panel>
+        <h3>From an idea to a product people can use</h3>
+        <p>Imagine a business wants to launch an online shopping app. Customers should be able to browse products, add them to a basket, pay and track their orders. Teams break this work into stages so they can plan, build, check and improve the product.</p>
+        <p>The <strong>Software Development Lifecycle (SDLC)</strong> is a structured way of organising the work involved in creating and maintaining software. It describes the journey from identifying a need through building and operating a solution.</p>
+        <Callout><strong>Key idea</strong>The SDLC is the bigger journey of building software. Testing helps the team check quality and manage risk throughout that journey.</Callout>
+      </Panel>
+      <Panel>
+        <h3>The common stages of the SDLC</h3>
+        <p>Different organisations use different names and combine stages in different ways. A typical lifecycle includes:</p>
+        <ol>
+          <li><strong>Planning:</strong> Identify the problem, goals, scope, resources and risks. Is the shopping app worth building, and what should it achieve?</li>
+          <li><strong>Requirements and analysis:</strong> Understand what users and the business need. For example, customers must be able to pay securely and receive an order confirmation.</li>
+          <li><strong>Design:</strong> Plan how the solution will work, including its user experience, architecture, data and integrations.</li>
+          <li><strong>Development:</strong> Developers write the code and build the features.</li>
+          <li><strong>Testing:</strong> The team evaluates the product, checks requirements, explores risks and reports defects.</li>
+          <li><strong>Deployment:</strong> The software is released to an environment where users can access it.</li>
+          <li><strong>Maintenance:</strong> The team monitors the product, fixes issues, supports users and delivers improvements.</li>
+        </ol>
+        <Callout><strong>Remember</strong>These stages are a useful model, not a rule that every team must follow in a strict one-way sequence. Real projects often revisit earlier decisions as new information emerges.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Where does the tester fit in?</h3>
+        <p>A common misconception is that testers wait until developers finish everything before getting involved. In a healthy delivery process, testing starts much earlier.</p>
+        <ul>
+          <li><strong>Planning:</strong> Ask about risks, important user journeys and how success will be measured.</li>
+          <li><strong>Requirements:</strong> Review user stories, clarify unclear rules and identify missing acceptance criteria.</li>
+          <li><strong>Design:</strong> Review workflows and designs, identify usability or integration risks, and help plan test coverage.</li>
+          <li><strong>Development:</strong> Discuss testability, prepare test data and environments, and work with developers on early checks.</li>
+          <li><strong>Testing:</strong> Execute checks, explore behaviour, report defects and provide evidence about quality.</li>
+          <li><strong>Release and maintenance:</strong> Support release decisions, verify fixes, run regression tests and investigate issues reported by users.</li>
+        </ul>
+        <Callout><strong>Shift-left testing</strong>This means involving testing activities earlier in the lifecycle, rather than waiting until the end. Finding a misunderstanding in a requirement review can prevent expensive rework later.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Does every team work the same way?</h3>
+        <p>No. Some teams use a more sequential approach, often called Waterfall, where work moves through planned phases. Other teams use Agile approaches, delivering software in smaller increments and getting feedback frequently.</p>
+        <p>In Agile teams, planning, design, development and testing may happen repeatedly within short iterations or sprints. Testing is continuous and closely connected to the rest of the team's work.</p>
+        <p>Neither approach removes the need to understand requirements, manage risks, test changes and support software after release.</p>
+      </Panel>
+    </> : !isQualityLesson ? <>
+      <Panel>
+        <h3>Let's start with a simple example</h3>
+        <p>Imagine you are using a banking app to send R500 to a friend. You enter their account details, confirm the amount and tap <strong>Send</strong>.</p>
+        <p>You expect the app to send exactly R500 to the correct person, show a clear result and update your balance accurately. But what if the app sends R5,000? What if it charges you twice? What if it says the payment failed even though the money left your account?</p>
+        <Callout><strong>Think about it</strong>Would you trust that app with your next payment? Software quality matters because people rely on software to do important things correctly.</Callout>
+      </Panel>
+      <Panel>
+        <h3>So, what is software testing?</h3>
+        <p><strong>Software testing is the process of evaluating a software application or system to find defects, check whether it meets requirements, and provide information about its quality and risks.</strong></p>
+        <p>In everyday language, testing means checking whether software behaves as expected — and exploring what happens when users do things the team may not have expected.</p>
+        <p>Testing is not simply clicking buttons to see if they work. It involves asking questions, understanding how a feature should behave, trying realistic and unusual situations, observing the results and communicating what you discover.</p>
+      </Panel>
+      <Panel>
+        <h3>What does a tester actually do?</h3>
+        <p>A tester approaches a feature with curiosity and a healthy amount of scepticism. A typical activity might look like this:</p>
+        <ol>
+          <li><strong>Understand the expectation.</strong> What should the feature do? What rules must it follow?</li>
+          <li><strong>Explore possible situations.</strong> Consider normal use, incorrect input, unusual values and unexpected behaviour.</li>
+          <li><strong>Try it out.</strong> Interact with the application, use test data and observe what happens.</li>
+          <li><strong>Compare actual and expected results.</strong> Did the software behave as intended?</li>
+          <li><strong>Communicate findings.</strong> Record defects clearly so the team can understand, investigate and fix them.</li>
+        </ol>
+        <Callout><strong>Remember</strong>A tester does not need to prove that software is perfect. The goal is to uncover useful information about quality and risk so the team can make better decisions.</Callout>
+      </Panel>
+      <Panel>
+        <h3>Testing is more than finding bugs</h3>
+        <p>Finding defects is important, but testing also helps a team:</p>
+        <ul>
+          <li>Check whether requirements and user needs are being met.</li>
+          <li>Reduce the risk of failures reaching real users.</li>
+          <li>Give stakeholders information they need to make release decisions.</li>
+          <li>Build confidence that important workflows behave as expected.</li>
+          <li>Identify gaps, unclear requirements and opportunities to improve the product.</li>
+        </ul>
+      </Panel>
+    </> : <>
+      <Panel>
+        <h3>Quality is something people experience</h3>
+        <p>Imagine ordering groceries through an online store. The app lets you search, add products to your basket and pay. The payment succeeds, but the order never appears. The app looks polished, yet the experience has failed.</p>
+        <p>Now imagine the order is created correctly, but the app takes 40 seconds to load each page. The core feature works, but customers may still abandon it.</p>
+        <Callout><strong>Key idea</strong>Software quality is not just about whether a feature works. It is about whether the product is useful, dependable and safe to use in the situations that matter.</Callout>
+      </Panel>
+      <Panel>
+        <h3>What does good quality look like?</h3>
+        <p>Quality has several dimensions. A product can be strong in one area and weak in another:</p>
+        <ul>
+          <li><strong>Functionality:</strong> Does it do what users need it to do?</li>
+          <li><strong>Reliability:</strong> Does it work consistently without unexpected failures?</li>
+          <li><strong>Usability:</strong> Can people understand and use it without unnecessary difficulty?</li>
+          <li><strong>Performance:</strong> Does it respond in a reasonable amount of time?</li>
+          <li><strong>Security:</strong> Does it protect accounts, information and transactions?</li>
+          <li><strong>Accessibility:</strong> Can people with different abilities use it?</li>
+        </ul>
+        <p>These are not separate boxes to tick once. They are different ways of looking at the same user experience.</p>
+      </Panel>
+      <Panel>
+        <h3>Why poor quality is expensive</h3>
+        <p>A defect discovered before release is usually easier to investigate and fix than one discovered by thousands of customers. Once a problem reaches production, the impact can include:</p>
+        <ul>
+          <li>Lost sales or failed transactions.</li>
+          <li>Customer complaints and loss of trust.</li>
+          <li>Support teams spending time resolving avoidable issues.</li>
+          <li>Emergency fixes, operational disruption and reputational damage.</li>
+        </ul>
+        <p>Not every defect has the same impact. A spelling mistake on a rarely visited page is different from a defect that sends money to the wrong account. Testers help teams understand that difference.</p>
+      </Panel>
+      <Panel>
+        <h3>Quality is a team responsibility</h3>
+        <p>Testers play an important role, but they cannot create quality alone. Developers, product owners, designers, analysts and operations teams all influence the final product.</p>
+        <p>Testing provides evidence: what was checked, what happened, what remains uncertain and where the biggest risks are. The team uses that information to make better decisions.</p>
+        <Callout><strong>Remember</strong>The goal is not simply to release software with zero known bugs. It is to understand the risks and make an informed decision about whether the product is ready for its users.</Callout>
+      </Panel>
+    </>}
+
+    <Panel>
+      <h3>Quick knowledge check</h3>
+      <p>{isDefectLesson ? "A tester reports that a transfer confirmation displays R5,000 instead of the R500 entered. Which information is most important to help the developer reproduce and investigate the defect?" : isTestDesignLesson ? "A transfer amount must be between R10 and R50,000. Which technique is most useful for selecting representative values from valid and invalid input groups?" : isTestCasesLesson ? "A transfer requirement allows amounts from R10 to R50,000. Which set of values is most useful for checking the lower boundary?" : isRequirementsLesson ? "A user story says customers can add beneficiaries. One acceptance criterion says: \"The system should be easy to use.\" What should the tester do?" : isLevelsTypesLesson ? "A developer has fixed a defect in the transfer fee calculation. The tester reruns the exact test that originally failed to confirm the fix. What is this called?" : isPrinciplesLesson ? "A tester has run the same successful payment test every day for several weeks, but it has not revealed any new defects. Which principle suggests the tester should review and expand the tests?" : isStlcLesson ? "A tester has executed a transfer test and found that the app sends R5,000 instead of the expected R500. What should happen next?" : isSdlcLesson ? "A tester reviews a user story and notices that the payment failure behaviour is not explained. Developers have not started coding yet. What is the best action?" : isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?"}</p>
+      <Question>
+        {isCapstoneLesson ? <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. Start executing random tests and decide expected results as you go.</Option>
+          <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Clarify gaps, derive scenarios and test cases from the rules, execute them, then report and verify defects.</Option>
+          <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Only test the happy path because the brief describes a successful transfer.</Option>
+        </> : isDefectLesson ? <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. The tester’s opinion about which developer caused the issue.</Option>
+          <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Clear reproduction steps, test data, expected and actual results, environment and relevant evidence.</Option>
+          <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Only the word “broken” and a screenshot with no context.</Option>
+        </> : isTestDesignLesson ? <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. State transition testing</Option>
+          <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Equivalence partitioning</Option>
+          <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Exploratory testing only</Option>
+        </> : isTestCasesLesson ? <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. R100 and R500, because they are normal transfer amounts.</Option>
+          <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. R9.99, R10 and R10.01, because they check just below, at and just above the minimum.</Option>
+          <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. R1, R5 and R8, because they are all below the minimum.</Option>
+        </> : isRequirementsLesson ? <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. Accept it as written because it is part of the requirement.</Option>
+          <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Ask stakeholders to clarify the expected behaviour in specific, observable terms.</Option>
+          <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Decide independently what “easy to use” means and test that.</Option>
+        </> : isLevelsTypesLesson ? <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. Regression testing</Option>
+          <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Confirmation testing (retesting)</Option>
+          <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Acceptance testing</Option>
+        </> : isPrinciplesLesson ? <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. Exhaustive testing is possible.</Option>
+          <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Tests wear out (the pesticide paradox).</Option>
+          <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Defects cluster together.</Option>
+        </> : isSdlcLesson ? <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. Wait until the application is released and see what happens.</Option>
+          <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Raise the gap now so the team can clarify the expected behaviour before implementation.</Option>
+          <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Ignore it because requirements are only the product owner's responsibility.</Option>
+        </> : isQualityLesson ? <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. The app is high quality because payments work.</Option>
+          <Option $selected={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. Security is only important for banking staff.</Option>
+          <Option $selected={answer === 2} $correct={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. Quality has several dimensions; a security failure is serious even if payments work.</Option>
+        </> : <>
+          <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. To make the application look more attractive.</Option>
+          <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. To evaluate behaviour, uncover defects and understand product risk.</Option>
+          <Option $selected={answer === 2} onClick={() => { setAnswer(2); setCompleted(false); }}>C. To guarantee that the application will never fail.</Option>
+        </>}
+      </Question>
+      {answer !== null && <Feedback $correct={correctAnswer}>{correctAnswer ? (isCapstoneLesson ? "Exactly. A structured tester clarifies requirements, designs checks for normal and exceptional behaviour, executes them, then reports and verifies defects. This is how the fundamentals work together." : isDefectLesson ? "Correct. A useful defect report gives the team reproducible steps, relevant context and clear expected-versus-actual results, supported by appropriate evidence." : isTestDesignLesson ? "Correct. Equivalence partitioning groups values expected to behave similarly, then uses representative values from each group. Boundary value analysis complements it by checking values around the limits." : isTestCasesLesson ? "Correct. Boundary-value testing checks values just below, at and just above a limit. This helps reveal errors in how the system handles the edge of an allowed range." : isRequirementsLesson ? "Correct. Vague criteria are difficult to verify consistently. The team should agree on clear, observable expectations before treating the story as testable." : isLevelsTypesLesson ? "Correct. Confirmation testing repeats the test that exposed the defect to check that the specific fix works. Regression testing checks for unintended side effects elsewhere." : isPrinciplesLesson ? "Correct. Repeating the same tests can become less effective over time. Improve the test suite with new scenarios, data and exploratory checks." : isStlcLesson ? "Exactly. Record the failure clearly, report it for investigation and retest once a fix is available." : isSdlcLesson ? "Exactly. Clarifying requirements early helps prevent misunderstandings from becoming defects later. Testing contributes before code is written." : isQualityLesson ? "Exactly. A product can work functionally and still be poor quality if it puts customer information at risk." : "That's right. Testing checks expected and unexpected behaviour, helps reveal defects and provides information about risk.")  : (isCapstoneLesson ? "Not quite. Testing should be systematic: understand the rules, identify risks and scenarios, define expected results, execute checks and report defects with evidence." : isDefectLesson ? "Not quite. The team needs enough context to repeat the issue and compare what happened with what should have happened. A label or uncontextualised screenshot is not enough." : isTestDesignLesson ? "Not quite. The question asks for a technique that divides input data into groups expected to behave alike. Boundary value analysis focuses specifically on values at and around limits." : isTestCasesLesson ? "Not quite. The most useful boundary checks are immediately below the minimum, exactly at the minimum and immediately above it. Testing only ordinary values may miss boundary defects." : isRequirementsLesson ? "Not quite. The phrase is subjective and does not tell the tester what result to observe. Ask the team to define specific, verifiable expectations." : isLevelsTypesLesson ? "Not quite. The question describes repeating the original failed test to verify one particular fix. Regression testing has a broader purpose: checking for side effects." : isPrinciplesLesson ? "Not quite. The clue is that repeating the same tests stops revealing new information. Which principle says tests need to be refreshed?" : isStlcLesson ? "A failed test should be documented with evidence and raised as a defect so the team can investigate and verify a fix." : isSdlcLesson ? "Not quite. Think about when the team can most easily clarify an unclear requirement — before or after implementation?" : isQualityLesson ? "Not quite. Think about the different dimensions of quality. Correct payment processing does not make an exposure of private information acceptable." : "Not quite. Think about what the tester is trying to learn by checking normal use and unusual input. Testing cannot guarantee that software will never fail.")}</Feedback>}
+    </Panel>
+
+    <Actions>
+      <Back onClick={onBack}>← Return to lesson outline</Back>
+      <Button $primary disabled={!correctAnswer} onClick={() => { setCompleted(true); onComplete(); }}>{completed ? "Lesson completed ✓" : "Mark lesson as complete"}</Button>
+    </Actions>
+  </Page>;
+}
