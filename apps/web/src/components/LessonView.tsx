@@ -14,9 +14,40 @@ const Feedback = styled.div<{ $correct: boolean }>(({ $correct }) => ({ padding:
 const Actions = styled.div({ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" });
 const Button = styled.button<{ $primary?: boolean }>(({ $primary }) => ({ border: "1px solid " + ($primary ? "#4b8cf5" : "#2b3b53"), background: $primary ? "#3479e7" : "#142136", color: $primary ? "#fff" : "#b7c7dc", padding: "10px 14px", borderRadius: 8, fontSize: 11, fontWeight: 700, cursor: "pointer", opacity: 1, "&:disabled": { opacity: .45, cursor: "not-allowed" } }));
 
-type Props = { lessonId: "manual-ui-forms-validation" | "manual-ui-navigation-state" | "manual-ui-responsive-cross-browser" | "manual-ui-usability-accessibility" | "manual-ui-exploratory-testing" | "manual-ui-browser-devtools" | "manual-ui-defect-investigation" | "manual-ui-shopstream-capstone" | "manual-ui-functional-ui-testing" | "manual-ui-turning-requirements-into-ui-checks" | "manual-ui-understanding-interface" | "manual-ui-introduction" | "what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles" | "test-levels-types" | "requirements-acceptance-criteria" | "test-scenarios-test-cases" | "test-design-techniques" | "defect-reporting-lifecycle" | "practical-testing-exercise"; onBack: () => void; onComplete: () => void };
 
-type ManualUiSection = { heading: string; paragraphs: string[]; bullets?: string[]; callout: string; visual?: DevToolsVisualKind };
+const ApiConceptVisual = ({ kind }: { kind: string }) => {
+  const visuals: Record<string, { title: string; caption: string; steps: string[] }> = {
+    introduction: { title: "An API connects two pieces of software", caption: "A simplified request and response journey", steps: ["ShopStream application  →  asks for products", "API endpoint  →  receives and processes request", "Data service  →  finds product information", "API response  →  returns data to ShopStream"] },
+    http: { title: "The HTTP conversation", caption: "Every request has a direction and a response", steps: ["1  Client sends an HTTP request", "2  Server receives and processes it", "3  Server returns a status and response", "4  Client uses the returned information"] },
+    methods: { title: "HTTP methods describe the action", caption: "Common methods a tester should recognise", steps: ["GET       Read information", "POST      Create or submit information", "PUT       Replace a resource", "PATCH     Partially update a resource", "DELETE    Remove a resource"] },
+    statuses: { title: "Status codes communicate the outcome", caption: "The first digit indicates the broad result", steps: ["2xx  Success  ·  200 OK, 201 Created", "3xx  Redirect ·  301 Moved, 304 Not Modified", "4xx  Client issue · 400 Bad Request, 401 Unauthorized, 404 Not Found", "5xx  Server issue · 500 Internal Server Error"] },
+    anatomy: { title: "Anatomy of an HTTP request", caption: "The parts work together to describe what the client needs", steps: ["METHOD   GET", "URL      /api/products?category=bags", "HEADERS  Accept: application/json", "BODY     Usually absent for this GET example"] },
+    json: { title: "JSON represents structured data", caption: "Objects contain named properties; arrays contain lists", steps: ["{", '  "id": 101,', '  "name": "Everyday Backpack",', '  "price": 599,', '  "inStock": true', "}"] },
+    request: { title: "A first API request", caption: "A request in an API client such as Postman or Bruno", steps: ["GET  https://api.shopstream.test/products", "Send  →", "200 OK", "Response body: a JSON list of products"] },
+    auth: { title: "Authentication vs authorisation", caption: "Two different questions are answered", steps: ["Authentication  →  Who are you?", "Credentials or token are verified", "Authorisation  →  What are you allowed to do?", "Access is allowed or denied for the requested action"] },
+    crud: { title: "CRUD maps to common API actions", caption: "A product resource example", steps: ["CREATE  POST   /api/products", "READ    GET    /api/products/101", "UPDATE  PATCH  /api/products/101", "DELETE  DELETE /api/products/101"] },
+    design: { title: "Build coverage from the requirement", caption: "A simple API test-design path", steps: ["Requirement  →  customer can view a product", "Inputs       →  valid ID, unknown ID, malformed ID", "Checks       →  status, schema, product values", "Evidence     →  request, response and result"] },
+    negative: { title: "Test beyond the happy path", caption: "Vary inputs and conditions deliberately", steps: ["Valid input       →  expected successful response", "Missing input     →  clear validation response", "Invalid format    →  controlled client error", "Unauthorised      →  access denied", "Unexpected server →  safe, useful error response"] },
+    validation: { title: "Validate more than the status code", caption: "A response can return 200 and still contain incorrect data", steps: ["Status       →  is the HTTP outcome correct?", "Structure    →  are required fields present?", "Data         →  are values and types correct?", "Rules        →  do business expectations hold?", "Headers      →  is the content type appropriate?"] },
+    defects: { title: "Turn an API failure into useful evidence", caption: "A reproducible API defect report", steps: ["Request  →  method, endpoint and safe test data", "Expected →  correct status and response", "Actual   →  observed status and response", "Evidence →  timestamp, correlation ID and redacted capture"] },
+    capstone: { title: "The ShopStream API testing journey", caption: "Bring the discipline together", steps: ["Explore endpoints and requirements", "Create and organise requests", "Test success, errors and access rules", "Validate response data and workflows", "Report defects and summarise coverage"] }
+  };
+  const visual = visuals[kind] ?? visuals.introduction;
+  return <div style={{ margin: "16px 0", border: "1px solid #344761", borderRadius: 10, overflow: "hidden", background: "#0b1422" }}>
+    <div style={{ padding: "12px 14px", background: "#18263a", borderBottom: "1px solid #344761" }}>
+      <div style={{ color: "#d9e8fb", fontSize: 12, fontWeight: 750 }}>{visual.title}</div>
+      <div style={{ color: "#8fa6c3", fontSize: 10, marginTop: 4 }}>{visual.caption}</div>
+    </div>
+    <div style={{ display: "grid", gap: 7, padding: 12 }}>
+      {visual.steps.map((step, index) => <div key={index} style={{ padding: "9px 11px", border: "1px solid #2b405c", borderRadius: 7, background: index === visual.steps.length - 1 ? "#17382f" : "#132238", color: index === visual.steps.length - 1 ? "#a4e0c2" : "#c2d3e8", fontFamily: kind === "json" || kind === "anatomy" || kind === "crud" ? "Consolas, Monaco, monospace" : "inherit", fontSize: 10, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{step}</div>)}
+    </div>
+    <div style={{ padding: "0 13px 11px", color: "#7189a8", fontSize: 9 }}>ILLUSTRATIVE LEARNING DIAGRAM · NOT A LIVE API</div>
+  </div>;
+};
+
+type Props = { lessonId: "api-introduction" | "api-http-web" | "api-http-methods" | "api-status-codes" | "api-headers-parameters-bodies" | "api-json" | "api-first-request" | "api-authentication" | "api-crud" | "api-test-design" | "api-negative-boundary-testing" | "api-response-validation" | "api-defect-reporting" | "api-shopstream-capstone" | "manual-ui-forms-validation" | "manual-ui-navigation-state" | "manual-ui-responsive-cross-browser" | "manual-ui-usability-accessibility" | "manual-ui-exploratory-testing" | "manual-ui-browser-devtools" | "manual-ui-defect-investigation" | "manual-ui-shopstream-capstone" | "manual-ui-functional-ui-testing" | "manual-ui-turning-requirements-into-ui-checks" | "manual-ui-understanding-interface" | "manual-ui-introduction" | "what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles" | "test-levels-types" | "requirements-acceptance-criteria" | "test-scenarios-test-cases" | "test-design-techniques" | "defect-reporting-lifecycle" | "practical-testing-exercise"; onBack: () => void; onComplete: () => void };
+
+type ManualUiSection = { heading: string; paragraphs: string[]; bullets?: string[]; callout: string; visual?: DevToolsVisualKind; apiVisual?: string };
 type DevToolsVisualKind = "elements" | "console" | "network" | "storage" | "responsive";
 const DevToolsVisual = ({ kind }: { kind: DevToolsVisualKind }) => {
   const examples: Record<DevToolsVisualKind, { tab: string; caption: string; rows: string[] }> = {
@@ -45,6 +76,576 @@ const DevToolsVisual = ({ kind }: { kind: DevToolsVisualKind }) => {
 };
 
 type ManualUiRemainingLesson = { title: string; description: string; minutes: string; activity: string; question: string; options: [string, string, string]; explanation: string; sections: ManualUiSection[] };
+const apiTestingLessons: Partial<Record<Props["lessonId"], ManualUiRemainingLesson>> = {
+  "api-introduction": {
+    "title": "Introduction to APIs",
+    "description": "Understand what an API is, why applications use APIs and how testers help verify communication between software systems.",
+    "minutes": "10–12 minutes",
+    "activity": "Visual concept + request journey",
+    "question": "ShopStream displays products supplied by a backend service. What is the API doing in this interaction?",
+    "options": [
+      "It connects the application to a service through an agreed way of requesting and exchanging data.",
+      "It is the colour and layout of the product page.",
+      "It automatically guarantees that every product price is correct."
+    ],
+    "explanation": "An API defines how software components communicate. Testing verifies that requests, responses and business rules behave as expected.",
+    "sections": [
+      {
+        "heading": "What is an API?",
+        "paragraphs": [
+          "API stands for Application Programming Interface. It is an agreed way for one piece of software to interact with another.",
+          "Think of ShopStream: the page needs product information. Instead of keeping every piece of information inside the visible page, the application can request it from an API. The API receives the request and returns information in an agreed format."
+        ],
+        "callout": "An API is a communication interface. It is not the same thing as the screen a user sees.",
+        "apiVisual": "introduction"
+      },
+      {
+        "heading": "Why testers test APIs",
+        "paragraphs": [
+          "A page can look correct while the data behind it is wrong. An API might return the wrong price, omit a field, expose information to the wrong user or fail when an input is missing.",
+          "API testing checks the service directly, often before a problem reaches the user interface. It can also help isolate whether a defect is in the front end, the API or another service."
+        ],
+        "bullets": [
+          "Check the request and response, not just whether the page appears to work."
+        ],
+        "callout": "API testing gives you a closer view of how application features receive and exchange information."
+      },
+      {
+        "heading": "Your first API observation",
+        "paragraphs": [
+          "Choose a feature such as viewing a product. Identify what information the page needs: product ID, name, description, price and availability.",
+          "Write down what the application must ask for and what a correct answer should contain. You are identifying test expectations before sending a request."
+        ],
+        "callout": "Deliverable: a short list of the data a product-details API should return."
+      }
+    ]
+  },
+  "api-http-web": {
+    "title": "How HTTP and the Web Work",
+    "description": "Follow a browser request to a server and back, and understand the role of HTTP in API communication.",
+    "minutes": "12–15 minutes",
+    "activity": "Request/response visual walkthrough",
+    "question": "What normally happens after a browser sends an HTTP request to a server?",
+    "options": [
+      "The browser assumes success without waiting for a response.",
+      "The server processes the request and sends an HTTP response containing a status and possibly data.",
+      "The browser changes the server database directly."
+    ],
+    "explanation": "HTTP is a request-response protocol. The response communicates an outcome and may include headers and a body.",
+    "sections": [
+      {
+        "heading": "The request-response cycle",
+        "paragraphs": [
+          "When you open a page or trigger an action, the application may send a request over HTTP. The server receives it, performs the required work and sends a response.",
+          "The response commonly contains a status code, headers and sometimes a body. The client uses that response to decide what to display or do next."
+        ],
+        "callout": "A request goes to a server; a response comes back. This is the foundation of many web APIs.",
+        "apiVisual": "http"
+      },
+      {
+        "heading": "HTTP and HTTPS",
+        "paragraphs": [
+          "HTTP defines how messages are structured and exchanged. HTTPS is HTTP protected by TLS encryption, helping protect information while it travels between client and server.",
+          "As a tester, check that sensitive workflows use secure connections and never share credentials, access tokens or private customer information in evidence."
+        ],
+        "callout": "HTTPS protects data in transit; it does not by itself prove that an API is secure or correct."
+      },
+      {
+        "heading": "What to observe as a tester",
+        "paragraphs": [
+          "Record the endpoint, request method, response status, important headers and response body. Compare the response with the requirement.",
+          "A request can reach the server successfully but still return incorrect business data. A complete check considers both the technical response and the expected behaviour."
+        ],
+        "callout": "Deliverable: draw or describe one request-response journey for viewing a ShopStream product."
+      }
+    ]
+  },
+  "api-http-methods": {
+    "title": "Understanding HTTP Methods",
+    "description": "Learn what common HTTP methods mean and how to select meaningful tests for each operation.",
+    "minutes": "12–15 minutes",
+    "activity": "Method comparison + examples",
+    "question": "Which HTTP method is normally used to retrieve a product without creating or changing it?",
+    "options": [
+      "POST",
+      "GET",
+      "DELETE"
+    ],
+    "explanation": "GET is used to retrieve a representation of a resource. Testers should verify that read operations do not unexpectedly change data.",
+    "sections": [
+      {
+        "heading": "Methods describe intent",
+        "paragraphs": [
+          "The HTTP method tells the server what kind of operation the client intends to perform. The endpoint identifies the resource being addressed.",
+          "GET, POST, PUT, PATCH and DELETE are common methods you will see when testing REST-style APIs."
+        ],
+        "callout": "Read the method and endpoint together. A URL alone does not tell the whole story.",
+        "apiVisual": "methods"
+      },
+      {
+        "heading": "Safe and idempotent behaviour",
+        "paragraphs": [
+          "GET is intended for retrieval and should not change server state. PUT generally replaces a resource, while PATCH applies a partial update. DELETE requests removal.",
+          "Idempotent means repeating the same request has the same intended effect as performing it once. GET, PUT and DELETE are defined as idempotent in HTTP semantics; POST is not generally idempotent. Real API behaviour must still be verified."
+        ],
+        "callout": "Do not repeatedly send create, payment or delete requests against real data. Use an approved test environment."
+      },
+      {
+        "heading": "ShopStream method exercise",
+        "paragraphs": [
+          "For each action, identify the method you expect: view products, create an order, update a delivery address and remove an item.",
+          "Then ask what evidence would prove the operation worked: response status, returned resource, updated values and whether a repeat request changes the outcome."
+        ],
+        "callout": "Deliverable: map four ShopStream user actions to methods and expected outcomes."
+      }
+    ]
+  },
+  "api-status-codes": {
+    "title": "Understanding HTTP Status Codes",
+    "description": "Interpret response status codes and learn why testers must verify both the code and the returned data.",
+    "minutes": "12–15 minutes",
+    "activity": "Status code visual guide",
+    "question": "A request successfully creates a new order. Which status code is commonly appropriate?",
+    "options": [
+      "404 Not Found",
+      "201 Created",
+      "500 Internal Server Error"
+    ],
+    "explanation": "201 Created indicates that the request was fulfilled and resulted in a new resource. Always confirm the response matches the API contract.",
+    "sections": [
+      {
+        "heading": "Status codes tell you the broad outcome",
+        "paragraphs": [
+          "An HTTP response status is a three-digit code. The first digit groups the response into informational, success, redirection, client-error or server-error categories.",
+          "Common examples include 200 OK, 201 Created, 204 No Content, 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found and 500 Internal Server Error."
+        ],
+        "callout": "A status code is an important signal, but it is not the whole test result.",
+        "apiVisual": "statuses"
+      },
+      {
+        "heading": "Do not test by code alone",
+        "paragraphs": [
+          "A response can return 200 OK and still contain the wrong product price or missing information. A 400 response may be correct for invalid input, but its error details should still be useful and safe.",
+          "Compare the actual result with the API contract and business requirement. Check whether the status is appropriate for that specific operation."
+        ],
+        "callout": "A passing API check needs the correct outcome and the correct response content."
+      },
+      {
+        "heading": "Practise interpreting outcomes",
+        "paragraphs": [
+          "Classify these examples: an unknown product ID, an unauthenticated request, a successfully created order and an unexpected server failure.",
+          "For each, write the status you expect and explain why. Treat exact codes as contract-specific where an API specification defines them."
+        ],
+        "callout": "Deliverable: a status-code reference with at least six examples and their expected use."
+      }
+    ]
+  },
+  "api-headers-parameters-bodies": {
+    "title": "Headers, Parameters and Request Bodies",
+    "description": "Understand the parts of an API request and how headers, query parameters, path parameters and bodies influence behaviour.",
+    "minutes": "15–18 minutes",
+    "activity": "Annotated request anatomy",
+    "question": "Where would you commonly place a filter such as category=bags when requesting products?",
+    "options": [
+      "As a query parameter in the URL.",
+      "Only in the response status code.",
+      "In the browser window title."
+    ],
+    "explanation": "Query parameters are commonly used to filter or control a collection request. The API contract determines the exact parameter names and rules.",
+    "sections": [
+      {
+        "heading": "Read the request from the outside in",
+        "paragraphs": [
+          "A request includes a method and URL. It may also include headers, parameters and a body. Each part has a purpose and should be checked against the API contract.",
+          "Path parameters commonly identify a particular resource, query parameters filter or modify a request, headers carry metadata, and the body carries submitted data when required."
+        ],
+        "callout": "Know where each value belongs before you start changing test data.",
+        "apiVisual": "anatomy"
+      },
+      {
+        "heading": "Headers and content types",
+        "paragraphs": [
+          "Headers provide additional information. Accept can indicate the response format the client can process. Content-Type describes the format of the request body.",
+          "Authentication information may also be sent in a header. Never paste real access tokens or cookies into screenshots, defect reports or public examples."
+        ],
+        "callout": "Check headers for correct values and protect any sensitive header content."
+      },
+      {
+        "heading": "Parameters and request bodies",
+        "paragraphs": [
+          "Try valid, missing, duplicated, malformed and unexpected parameter values where the API contract allows those tests.",
+          "For request bodies, check required fields, optional fields, data types, formats and business rules. A JSON body with valid syntax can still contain invalid business data."
+        ],
+        "callout": "Deliverable: annotate one sample request and identify its method, URL, headers, parameters and body."
+      }
+    ]
+  },
+  "api-json": {
+    "title": "Understanding JSON",
+    "description": "Read JSON objects, arrays, properties and data types so you can inspect API responses with confidence.",
+    "minutes": "12–15 minutes",
+    "activity": "Visual JSON walkthrough",
+    "question": "In JSON, which value is a Boolean?",
+    "options": [
+      "\"inStock\": \"true\"",
+      "\"inStock\": true",
+      "\"inStock\": 1"
+    ],
+    "explanation": "The value true without quotation marks is a Boolean. Quoted true is a string, and 1 is a number.",
+    "sections": [
+      {
+        "heading": "What is JSON?",
+        "paragraphs": [
+          "JSON stands for JavaScript Object Notation. It is a lightweight text format commonly used to exchange structured data between applications.",
+          "A JSON object contains key-value pairs inside braces. An array contains an ordered list inside square brackets. Objects and arrays can be nested."
+        ],
+        "callout": "Read the structure first: identify objects, arrays and the properties inside them.",
+        "apiVisual": "json"
+      },
+      {
+        "heading": "Know the data types",
+        "paragraphs": [
+          "JSON supports strings, numbers, Booleans, null, objects and arrays. Quotation marks matter: the number 599 is not the same data type as the string \"599\".",
+          "A response can be valid JSON but still violate the expected schema or contain incorrect values. Check types as well as content."
+        ],
+        "callout": "A syntactically valid JSON response is not automatically a correct API response."
+      },
+      {
+        "heading": "Practise reading a response",
+        "paragraphs": [
+          "Inspect a sample product response. Identify the product ID, name, price, availability and any nested category object.",
+          "Write down the expected type for each field. Consider what should happen if a required field is missing or has the wrong type."
+        ],
+        "callout": "Deliverable: a field-and-data-type checklist for a ShopStream product response."
+      }
+    ]
+  },
+  "api-first-request": {
+    "title": "Sending Your First API Request",
+    "description": "Use an API client to send a request, inspect the response and save useful evidence without needing to write application code.",
+    "minutes": "15–20 minutes",
+    "activity": "Guided API client exercise",
+    "question": "After sending a GET request, what should you inspect first?",
+    "options": [
+      "Only whether the Send button was clicked.",
+      "The response status, headers, body and whether they match the expected behaviour.",
+      "Whether the request tab has a memorable name."
+    ],
+    "explanation": "The request being sent is only the start. Verify the actual response against the requirement and record relevant evidence.",
+    "sections": [
+      {
+        "heading": "Meet your API client",
+        "paragraphs": [
+          "An API client such as Postman or Bruno lets you compose and send HTTP requests without building a user interface. You choose a method, enter a URL, add headers or a body and inspect the response.",
+          "For learning, use a dedicated sample or approved test environment. Do not send practice requests to production systems or services you do not have permission to test."
+        ],
+        "callout": "An API client is your workbench for exploring and testing API behaviour.",
+        "apiVisual": "request"
+      },
+      {
+        "heading": "Send a simple GET request",
+        "paragraphs": [
+          "Start with a read-only endpoint such as a product list. Select GET, enter the approved base URL and endpoint, then send the request.",
+          "Inspect the status, response time, headers and JSON body. Compare the returned records and fields with what the requirement says should be available."
+        ],
+        "callout": "Capture the request and response as evidence, while redacting secrets and personal data."
+      },
+      {
+        "heading": "Organise your first check",
+        "paragraphs": [
+          "Give the request a clear name, record its purpose and note the expected result. Keep the base URL configurable rather than copying different environment URLs into every request.",
+          "Repeat the request only where it is safe to do so. Record whether the response is consistent and whether the result meets the requirement."
+        ],
+        "callout": "Deliverable: one saved GET request with its expected result and a short execution note."
+      }
+    ]
+  },
+  "api-authentication": {
+    "title": "Authentication and Authorisation",
+    "description": "Understand how APIs identify callers and decide which resources or actions they are allowed to access.",
+    "minutes": "15–18 minutes",
+    "activity": "Access-control scenarios",
+    "question": "A user is signed in but does not have permission to delete an order. Which concept controls that decision?",
+    "options": [
+      "Authentication",
+      "Authorisation",
+      "JSON formatting"
+    ],
+    "explanation": "Authentication verifies identity; authorisation determines what that identity is allowed to do.",
+    "sections": [
+      {
+        "heading": "Two questions, two controls",
+        "paragraphs": [
+          "Authentication asks who is making the request. Authorisation asks whether that caller is allowed to perform the requested action on the resource.",
+          "A valid login does not automatically grant access to every operation. A customer may view their own order but must not view another customer's private order."
+        ],
+        "callout": "Authentication is identity. Authorisation is permission.",
+        "apiVisual": "auth"
+      },
+      {
+        "heading": "Common authentication approaches",
+        "paragraphs": [
+          "APIs may use API keys, session cookies, bearer tokens or other mechanisms. The correct approach is defined by the system's security design.",
+          "Test valid credentials, missing credentials, invalid or expired credentials and appropriate token renewal behaviour. Use only test accounts and approved credentials."
+        ],
+        "callout": "Never include live secrets, tokens or passwords in source control, screenshots or defect reports."
+      },
+      {
+        "heading": "Test access boundaries",
+        "paragraphs": [
+          "Check unauthenticated access, authenticated access, role restrictions and ownership rules. Try to access another test user's resource only in an authorised environment with approved test data.",
+          "A secure API should deny unauthorised actions without exposing private information. Verify both the status and the response body."
+        ],
+        "callout": "Deliverable: an access-control matrix showing roles, allowed actions and expected denials."
+      }
+    ]
+  },
+  "api-crud": {
+    "title": "CRUD Operations",
+    "description": "Connect create, read, update and delete operations to API requests and verify the lifecycle of a resource.",
+    "minutes": "15–18 minutes",
+    "activity": "Resource lifecycle diagram",
+    "question": "Which sequence best represents a simple product resource lifecycle?",
+    "options": [
+      "GET, GET, GET, GET regardless of the action.",
+      "POST to create, GET to read, PUT/PATCH to update and DELETE to remove.",
+      "DELETE to create, then POST to read."
+    ],
+    "explanation": "CRUD stands for Create, Read, Update and Delete. APIs commonly implement these operations with POST, GET, PUT/PATCH and DELETE.",
+    "sections": [
+      {
+        "heading": "Understand CRUD",
+        "paragraphs": [
+          "CRUD stands for Create, Read, Update and Delete. Many APIs expose these actions for resources such as products, customers, carts and orders.",
+          "The exact method and endpoint depend on the API contract. A tester should understand the expected state before and after each operation."
+        ],
+        "callout": "Test the resource lifecycle, not just each request in isolation.",
+        "apiVisual": "crud"
+      },
+      {
+        "heading": "Verify state changes",
+        "paragraphs": [
+          "After creating a resource, verify that it exists and that the returned identifier can be used to retrieve it. After an update, retrieve it again and confirm the intended fields changed.",
+          "After deletion, verify the resource is no longer available according to the API's documented behaviour. Some systems use soft deletion or asynchronous processing, so do not assume every delete returns the same result."
+        ],
+        "callout": "Use controlled test data and clean up resources only when the test plan permits it."
+      },
+      {
+        "heading": "Exercise a product lifecycle",
+        "paragraphs": [
+          "In an approved test environment, create or use a test resource, retrieve it, update a safe field and verify the change.",
+          "If delete operations are permitted, remove the test resource and confirm the documented result. Record identifiers so each step is traceable."
+        ],
+        "callout": "Deliverable: a CRUD test sequence with preconditions, requests, expected results and observed results."
+      }
+    ]
+  },
+  "api-test-design": {
+    "title": "API Test Scenarios and Test Cases",
+    "description": "Turn API requirements into structured scenarios with clear inputs, expected responses and evidence.",
+    "minutes": "15–18 minutes",
+    "activity": "Test design exercise",
+    "question": "A product endpoint accepts a product ID. Which set gives the most useful starting coverage?",
+    "options": [
+      "Test only product ID 1 once.",
+      "Test a valid existing ID, an unknown ID, a malformed ID and a missing ID, based on the contract.",
+      "Send random values without recording the expected result."
+    ],
+    "explanation": "A useful set covers representative valid and invalid conditions, with expected outcomes defined before execution.",
+    "sections": [
+      {
+        "heading": "Start with the API contract",
+        "paragraphs": [
+          "Identify the endpoint's purpose, required inputs, optional inputs, response fields, status codes and business rules.",
+          "Turn each rule into something observable. For example: given an existing product ID, the endpoint returns the correct product details and documented success status."
+        ],
+        "callout": "A test case should prove a requirement, not merely send a request.",
+        "apiVisual": "design"
+      },
+      {
+        "heading": "Build meaningful scenarios",
+        "paragraphs": [
+          "Include valid requests, missing fields, invalid formats, boundary values, unauthorised access and relevant state changes.",
+          "For each scenario record the method, endpoint, input data, preconditions, expected status, expected response and any cleanup needed."
+        ],
+        "callout": "Good test design balances coverage, risk and the time available."
+      },
+      {
+        "heading": "Write an executable test case",
+        "paragraphs": [
+          "Use a clear title such as 'Retrieve an existing product by ID'. Define the test data and exact expected values.",
+          "Avoid vague expected results such as 'API works'. State what should be returned, including important fields, types and business rules."
+        ],
+        "callout": "Deliverable: at least six API test cases for the ShopStream product endpoint."
+      }
+    ]
+  },
+  "api-negative-boundary-testing": {
+    "title": "Positive, Negative and Boundary Testing",
+    "description": "Challenge API behaviour with valid, invalid, missing and boundary inputs, and verify controlled error handling.",
+    "minutes": "15–18 minutes",
+    "activity": "Input variation and edge cases",
+    "question": "A quantity endpoint accepts whole numbers from 1 to 10. Which set best checks the boundaries?",
+    "options": [
+      "2, 3 and 4 only.",
+      "0, 1, 2, 9, 10 and 11.",
+      "Only the maximum value 10."
+    ],
+    "explanation": "Values just below, at and just above each boundary help reveal off-by-one and validation defects.",
+    "sections": [
+      {
+        "heading": "Positive and negative testing",
+        "paragraphs": [
+          "Positive tests use valid data and confirm expected success. Negative tests deliberately use invalid, missing or unauthorised inputs and verify that the API handles them safely.",
+          "A negative test is not successful merely because the request fails. The failure should be controlled, documented and consistent with the API contract."
+        ],
+        "callout": "A good negative test checks the quality of the error response as well as the rejection.",
+        "apiVisual": "negative"
+      },
+      {
+        "heading": "Boundary values and equivalence groups",
+        "paragraphs": [
+          "If quantity must be from 1 to 10, useful boundary values include 0, 1, 2, 9, 10 and 11. These test just outside, at and just inside the permitted range.",
+          "Group inputs that should behave similarly, then select representative values. Consider wrong data types, empty strings, excessive lengths and unexpected formats where relevant."
+        ],
+        "callout": "Test just below, at and just above important limits."
+      },
+      {
+        "heading": "Safe error handling",
+        "paragraphs": [
+          "Check that invalid requests do not create partial records, corrupt existing data or reveal internal stack traces and secrets.",
+          "Repeat tests only when safe. For create, payment or delete operations, use isolated test data and understand the side effects before execution."
+        ],
+        "callout": "Deliverable: a negative and boundary test matrix with expected status and response behaviour."
+      }
+    ]
+  },
+  "api-response-validation": {
+    "title": "Validating API Responses",
+    "description": "Validate status codes, headers, response structure, data types and business rules rather than relying on a successful request alone.",
+    "minutes": "15–20 minutes",
+    "activity": "Response validation checklist",
+    "question": "An endpoint returns 200 OK but the product price is incorrect. What is the correct test result?",
+    "options": [
+      "Pass, because the status code is successful.",
+      "Fail, because the response violates the expected business data even though the status is 200.",
+      "Blocked, because testers cannot validate response values."
+    ],
+    "explanation": "A successful status does not guarantee correct content. Validate the response against the contract and business requirements.",
+    "sections": [
+      {
+        "heading": "A response has several things to validate",
+        "paragraphs": [
+          "Check the status code, headers, response body, data types, required fields and business rules. Each can reveal a different class of defect.",
+          "For example, a product endpoint may return 200 OK but provide the wrong price, an empty product name or an incorrect availability value."
+        ],
+        "callout": "Do not stop at 200 OK. Verify the meaning and correctness of the response.",
+        "apiVisual": "validation"
+      },
+      {
+        "heading": "Structure, schema and business rules",
+        "paragraphs": [
+          "Structure checks confirm that expected fields exist and have the right types. Schema validation checks the response against a defined contract or schema.",
+          "Business-rule checks go further: a product price must match the catalogue, a cart total must equal its line totals, and an order should belong to the correct customer."
+        ],
+        "callout": "A schema can be valid while business data is still wrong."
+      },
+      {
+        "heading": "Create a repeatable validation checklist",
+        "paragraphs": [
+          "For each endpoint, list required fields, allowed types, expected values, formats and important relationships between fields.",
+          "Use assertions in your API client or test framework where appropriate, but keep the expected behaviour understandable and traceable to a requirement."
+        ],
+        "callout": "Deliverable: a response validation checklist for a product and cart endpoint."
+      }
+    ]
+  },
+  "api-defect-reporting": {
+    "title": "API Defect Investigation and Reporting",
+    "description": "Capture reproducible API failures with clear request details, expected and actual results, and safe supporting evidence.",
+    "minutes": "12–15 minutes",
+    "activity": "Defect report exercise",
+    "question": "Which information is most useful in an API defect report?",
+    "options": [
+      "A screenshot saying 'API broken'.",
+      "The endpoint and method, safe request data, expected and actual response, status and reproducible steps.",
+      "Only the developer's name."
+    ],
+    "explanation": "A useful report lets another person reproduce and investigate the issue while protecting secrets and personal data.",
+    "sections": [
+      {
+        "heading": "Investigate before reporting",
+        "paragraphs": [
+          "Repeat the request in a controlled environment and confirm the failure. Compare it with a known-good request where useful.",
+          "Check whether the issue depends on a particular input, account role, resource state or environment. Record observations separately from assumptions."
+        ],
+        "callout": "Describe what the evidence proves. Do not guess at the root cause.",
+        "apiVisual": "defects"
+      },
+      {
+        "heading": "Write a useful API defect report",
+        "paragraphs": [
+          "Include a concise title, environment, method, endpoint, preconditions, safe test data, reproduction steps, expected result, actual result and relevant response details.",
+          "Include timestamps or correlation IDs when available. Redact passwords, tokens, cookies, personal information and confidential values before sharing captures."
+        ],
+        "callout": "Make the defect reproducible without exposing sensitive information."
+      },
+      {
+        "heading": "Triage and retest",
+        "paragraphs": [
+          "Explain the impact on users or business processes. Severity describes impact; priority helps the team decide when to address it.",
+          "After a fix, repeat the original failing request and run related regression checks. Confirm that the fix has not broken other endpoints or workflows."
+        ],
+        "callout": "Deliverable: one complete API defect report and a retest note."
+      }
+    ]
+  },
+  "api-shopstream-capstone": {
+    "title": "ShopStream API Testing Capstone",
+    "description": "Plan and execute an API test effort across products, cart and checkout workflows, then produce professional evidence and a concise test summary.",
+    "minutes": "30–45 minutes",
+    "activity": "Practical API testing capstone",
+    "question": "What makes a strong API testing capstone submission?",
+    "options": [
+      "A collection containing requests that were never executed.",
+      "Executed test cases with evidence, validated responses, documented defects and a clear summary of coverage and risks.",
+      "A list of endpoint names with no expected results."
+    ],
+    "explanation": "A professional submission demonstrates planned coverage, execution evidence, response validation, defect reporting and an honest summary of remaining risks.",
+    "sections": [
+      {
+        "heading": "Your mission",
+        "paragraphs": [
+          "You are responsible for testing the ShopStream API in an approved test environment. Focus on product discovery, cart operations and checkout-related behaviour where endpoints are available.",
+          "Start by reviewing the available API documentation and identifying the endpoints, roles, data requirements and risks. Do not assume undocumented behaviour."
+        ],
+        "callout": "Work only against the supplied practice API or another environment you are explicitly authorised to test.",
+        "apiVisual": "capstone"
+      },
+      {
+        "heading": "Plan and execute",
+        "paragraphs": [
+          "Create a small collection of requests grouped by feature. Include happy paths, invalid inputs, boundary values and access-control checks that are relevant to the documented contract.",
+          "Execute the requests and record expected versus actual results. Validate status codes, response structure, data values and state changes. Keep test data traceable."
+        ],
+        "bullets": [
+          "Products: list, filter and retrieve product details.",
+          "Cart: add, retrieve, update quantity and remove items.",
+          "Checkout: validate required data and documented order behaviour."
+        ],
+        "callout": "Use a clean test environment and avoid real customer data or real payment actions."
+      },
+      {
+        "heading": "Build your evidence pack",
+        "paragraphs": [
+          "Prepare your API collection, test scenarios, executed results, selected request/response evidence, defect reports and a short test summary.",
+          "The summary should state what was tested, what passed or failed, what remains blocked or untested, key risks and your recommendation. Be honest about coverage limitations."
+        ],
+        "callout": "Final portfolio output: a reusable API collection, test cases, execution evidence, defect reports and a concise test summary."
+      }
+    ]
+  }
+};
 const manualUiRemainingLessons: Partial<Record<Props["lessonId"], ManualUiRemainingLesson>> = {
   "manual-ui-forms-validation": {
     title: "Forms and Input Validation", description: "Test how ShopStream accepts, rejects and explains user input, including required fields, formats, boundaries and helpful validation feedback.", minutes: "12–15 minutes", activity: "Concept + form testing", question: "A checkout form requires a valid email address. Which test gives the strongest evidence that validation works?", options: ["Enter a valid email and check only that the field accepts typing.","Try valid, missing and malformed email values; verify clear feedback and whether checkout can proceed appropriately.","Enter random text into every field and assume the form is covered."], explanation: "Validation needs both accepted and rejected examples. Check the field-level feedback and the overall form behaviour, not merely whether typing is possible.",
@@ -134,6 +735,9 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
   const [answer, setAnswer] = useState<number | null>(null);
   const [completed, setCompleted] = useState(false);
   const manualUiRemainingLesson = manualUiRemainingLessons[lessonId];
+  const apiTestingLesson = apiTestingLessons[lessonId];
+  const isApiLesson = Boolean(apiTestingLesson);
+  const apiLessonNumber = ["api-introduction","api-http-web","api-http-methods","api-status-codes","api-headers-parameters-bodies","api-json","api-first-request","api-authentication","api-crud","api-test-design","api-negative-boundary-testing","api-response-validation","api-defect-reporting","api-shopstream-capstone"].indexOf(lessonId) + 1;
   const manualUiRemainingLessonNumber = ["manual-ui-forms-validation", "manual-ui-navigation-state", "manual-ui-responsive-cross-browser", "manual-ui-usability-accessibility", "manual-ui-exploratory-testing", "manual-ui-browser-devtools", "manual-ui-defect-investigation", "manual-ui-shopstream-capstone"].indexOf(lessonId) + 5;
   const isManualUiIntroLesson = lessonId === "manual-ui-introduction";
   const isManualUiRequirementsLesson = lessonId === "manual-ui-turning-requirements-into-ui-checks";
@@ -151,22 +755,23 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
   const isCapstoneLesson = lessonId === "practical-testing-exercise";
   const correctIndex = isQualityLesson ? 2 : 1;
   const correctAnswer = answer === correctIndex;
-  const title = manualUiRemainingLesson?.title ?? (isManualUiFunctionalLesson ? "Functional UI Testing" : isManualUiRequirementsLesson ? "Turning Requirements into UI Checks" : isManualUiInterfaceLesson ? "Understanding the User Interface" : isManualUiIntroLesson ? "Introduction to Manual & UI Testing" : isCapstoneLesson ? "Putting It All Together: A Practical Testing Exercise" : isDefectLesson ? "Defect Reporting and the Defect Lifecycle" : isTestDesignLesson ? "Test Design Techniques" : isTestCasesLesson ? "Test Scenarios and Test Cases" : isRequirementsLesson ? "Understanding Requirements and Acceptance Criteria" : isLevelsTypesLesson ? "Test Levels and Test Types" : isPrinciplesLesson ? "Testing Principles" : isStlcLesson ? "The Software Testing Lifecycle (STLC)" : isSdlcLesson ? "The Software Development Lifecycle (SDLC)" : isQualityLesson ? "Why Quality Matters" : "What is Software Testing?");
+  const title = apiTestingLesson?.title ?? manualUiRemainingLesson?.title ?? (isManualUiFunctionalLesson ? "Functional UI Testing" : isManualUiRequirementsLesson ? "Turning Requirements into UI Checks" : isManualUiInterfaceLesson ? "Understanding the User Interface" : isManualUiIntroLesson ? "Introduction to Manual & UI Testing" : isCapstoneLesson ? "Putting It All Together: A Practical Testing Exercise" : isDefectLesson ? "Defect Reporting and the Defect Lifecycle" : isTestDesignLesson ? "Test Design Techniques" : isTestCasesLesson ? "Test Scenarios and Test Cases" : isRequirementsLesson ? "Understanding Requirements and Acceptance Criteria" : isLevelsTypesLesson ? "Test Levels and Test Types" : isPrinciplesLesson ? "Testing Principles" : isStlcLesson ? "The Software Testing Lifecycle (STLC)" : isSdlcLesson ? "The Software Development Lifecycle (SDLC)" : isQualityLesson ? "Why Quality Matters" : "What is Software Testing?");
 
   return <Page>
-    <Back onClick={onBack}>← Back to {manualUiRemainingLesson || isManualUiIntroLesson || isManualUiInterfaceLesson || isManualUiRequirementsLesson || isManualUiFunctionalLesson ? "Manual & UI Testing" : "Software Testing Fundamentals"}</Back>
+    <Back onClick={onBack}>← Back to {isApiLesson ? "API Testing" : manualUiRemainingLesson || isManualUiIntroLesson || isManualUiInterfaceLesson || isManualUiRequirementsLesson || isManualUiFunctionalLesson ? "Manual & UI Testing" : "Software Testing Fundamentals"}</Back>
     <Hero>
-      <Eyebrow>{manualUiRemainingLesson ? `Manual & UI Testing · Lesson ${String(manualUiRemainingLessonNumber).padStart(2,"0")}` : isManualUiFunctionalLesson ? "Manual & UI Testing · Lesson 04" : isManualUiRequirementsLesson ? "Manual & UI Testing · Lesson 03" : isManualUiInterfaceLesson ? "Manual & UI Testing · Lesson 02" : isManualUiIntroLesson ? "Manual & UI Testing · Lesson 01" : <>Software Testing Fundamentals · Lesson {isCapstoneLesson ? "11" : isDefectLesson ? "10" : isTestDesignLesson ? "09" : isTestCasesLesson ? "08" : isRequirementsLesson ? "07" : isLevelsTypesLesson ? "06" : isPrinciplesLesson ? "05" : isStlcLesson ? "04" : isSdlcLesson ? "03" : isQualityLesson ? "02" : "01"}</>}</Eyebrow>
+      <Eyebrow>{isApiLesson ? `API Testing · Lesson ${String(apiLessonNumber).padStart(2,"0")}` : manualUiRemainingLesson ? `Manual & UI Testing · Lesson ${String(manualUiRemainingLessonNumber).padStart(2,"0")}` : isManualUiFunctionalLesson ? "Manual & UI Testing · Lesson 04" : isManualUiRequirementsLesson ? "Manual & UI Testing · Lesson 03" : isManualUiInterfaceLesson ? "Manual & UI Testing · Lesson 02" : isManualUiIntroLesson ? "Manual & UI Testing · Lesson 01" : <>Software Testing Fundamentals · Lesson {isCapstoneLesson ? "11" : isDefectLesson ? "10" : isTestDesignLesson ? "09" : isTestCasesLesson ? "08" : isRequirementsLesson ? "07" : isLevelsTypesLesson ? "06" : isPrinciplesLesson ? "05" : isStlcLesson ? "04" : isSdlcLesson ? "03" : isQualityLesson ? "02" : "01"}</>}</Eyebrow>
       <h2>{title}</h2>
-      <p>{manualUiRemainingLesson?.description ?? (isManualUiFunctionalLesson ? "Learn how to verify that visible controls and complete user workflows behave correctly, from product selection through cart and checkout." : isManualUiRequirementsLesson ? "Learn how to translate product requirements into observable checks that verify what a user can see and do." : isManualUiInterfaceLesson ? "Learn to recognise the parts of a web interface, understand their purpose and identify what a tester should observe and verify on each page." : isManualUiIntroLesson ? "Learn what manual testing and UI testing mean, how they differ, and how you will use ShopStream to practise testing real user journeys." : isCapstoneLesson ? "Bring the fundamentals together by testing a realistic money-transfer feature from requirements review through test design, execution and defect reporting." : isDefectLesson ? "Learn to write clear defect reports, distinguish severity from priority and follow defects through investigation, fixing and verification." : isTestDesignLesson ? "Learn structured techniques for selecting effective test cases, including equivalence partitions, boundaries, decision tables and state transitions." : isTestCasesLesson ? "Turn requirements into focused test scenarios and detailed test cases, with practical examples of test data, expected results and boundary checks." : isRequirementsLesson ? "Learn how to read requirements, ask useful questions and turn acceptance criteria into clear, testable expectations." : isLevelsTypesLesson ? "Understand the different layers and purposes of testing, and learn how they work together to build confidence in a product." : isPrinciplesLesson ? "Explore seven foundational principles that guide effective testing and help testers make better decisions." : isStlcLesson ? "Follow the testing process from understanding requirements through planning, execution, defect handling and closure." : isSdlcLesson ? "Follow a software product from its first idea to release and ongoing improvement — and see where testing fits at every stage." : isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use.")}</p>
-      <Meta><span>◷ {manualUiRemainingLesson?.minutes ?? (isManualUiFunctionalLesson ? "12–15 minutes" : isManualUiRequirementsLesson ? "12–15 minutes" : isManualUiInterfaceLesson ? "10–12 minutes" : isManualUiIntroLesson ? "10–12 minutes" : isCapstoneLesson ? "15–20 minutes" : "8–10 minutes")}</span><span>◈ Beginner</span><span>◇ {manualUiRemainingLesson?.activity ?? (isManualUiFunctionalLesson ? "Concept + workflow testing" : isManualUiRequirementsLesson ? "Concept + test design exercise" : isManualUiInterfaceLesson ? "Concept + interface inspection" : isManualUiIntroLesson ? "Concept + ShopStream activity" : isCapstoneLesson ? "Practical capstone" : "Concept + knowledge check")}</span></Meta>
+      <p>{apiTestingLesson?.description ?? manualUiRemainingLesson?.description ?? (isManualUiFunctionalLesson ? "Learn how to verify that visible controls and complete user workflows behave correctly, from product selection through cart and checkout." : isManualUiRequirementsLesson ? "Learn how to translate product requirements into observable checks that verify what a user can see and do." : isManualUiInterfaceLesson ? "Learn to recognise the parts of a web interface, understand their purpose and identify what a tester should observe and verify on each page." : isManualUiIntroLesson ? "Learn what manual testing and UI testing mean, how they differ, and how you will use ShopStream to practise testing real user journeys." : isCapstoneLesson ? "Bring the fundamentals together by testing a realistic money-transfer feature from requirements review through test design, execution and defect reporting." : isDefectLesson ? "Learn to write clear defect reports, distinguish severity from priority and follow defects through investigation, fixing and verification." : isTestDesignLesson ? "Learn structured techniques for selecting effective test cases, including equivalence partitions, boundaries, decision tables and state transitions." : isTestCasesLesson ? "Turn requirements into focused test scenarios and detailed test cases, with practical examples of test data, expected results and boundary checks." : isRequirementsLesson ? "Learn how to read requirements, ask useful questions and turn acceptance criteria into clear, testable expectations." : isLevelsTypesLesson ? "Understand the different layers and purposes of testing, and learn how they work together to build confidence in a product." : isPrinciplesLesson ? "Explore seven foundational principles that guide effective testing and help testers make better decisions." : isStlcLesson ? "Follow the testing process from understanding requirements through planning, execution, defect handling and closure." : isSdlcLesson ? "Follow a software product from its first idea to release and ongoing improvement — and see where testing fits at every stage." : isQualityLesson ? "Understand how software quality affects real people, businesses and the decisions teams make before release." : "Discover what testing really means, why teams do it, and how testers help people trust the software they use.")}</p>
+      <Meta><span>◷ {apiTestingLesson?.minutes ?? manualUiRemainingLesson?.minutes ?? (isManualUiFunctionalLesson ? "12–15 minutes" : isManualUiRequirementsLesson ? "12–15 minutes" : isManualUiInterfaceLesson ? "10–12 minutes" : isManualUiIntroLesson ? "10–12 minutes" : isCapstoneLesson ? "15–20 minutes" : "8–10 minutes")}</span><span>◈ Beginner</span><span>◇ {apiTestingLesson?.activity ?? manualUiRemainingLesson?.activity ?? (isManualUiFunctionalLesson ? "Concept + workflow testing" : isManualUiRequirementsLesson ? "Concept + test design exercise" : isManualUiInterfaceLesson ? "Concept + interface inspection" : isManualUiIntroLesson ? "Concept + ShopStream activity" : isCapstoneLesson ? "Practical capstone" : "Concept + knowledge check")}</span></Meta>
     </Hero>
 
-    {manualUiRemainingLesson ? <>
-      {manualUiRemainingLesson.sections.map((section) => <Panel key={section.heading}>
+    {apiTestingLesson || manualUiRemainingLesson ? <>
+      {(apiTestingLesson ?? manualUiRemainingLesson)!.sections.map((section) => <Panel key={section.heading}>
         <h3>{section.heading}</h3>
         {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
         {section.visual && <DevToolsVisual kind={section.visual} />}
+        {section.apiVisual && <ApiConceptVisual kind={section.apiVisual} />}
         <Callout><strong>Tester takeaway</strong>{section.callout}</Callout>
       </Panel>)}
     </> : isManualUiFunctionalLesson ? <>
@@ -977,10 +1582,10 @@ export function LessonView({ lessonId, onBack, onComplete }: Props) {
 
     <Panel>
       <h3>Quick knowledge check</h3>
-      <p>{manualUiRemainingLesson?.question ?? (isManualUiFunctionalLesson ? "A ShopStream tester adds a product priced at R120 to the cart and changes its quantity to 2. Which result best confirms the cart feature is working correctly?" : isManualUiRequirementsLesson ? "A requirement says shoppers can add products to the cart. Which UI check is the most useful and testable?" : isManualUiInterfaceLesson ? "A ShopStream tester selects Add to cart on a product card. Which approach gives the most complete check of this interaction?" : isManualUiIntroLesson ? "Which statement best explains the relationship between manual testing and UI testing?" : isDefectLesson ? "A tester reports that a transfer confirmation displays R5,000 instead of the R500 entered. Which information is most important to help the developer reproduce and investigate the defect?" : isTestDesignLesson ? "A transfer amount must be between R10 and R50,000. Which technique is most useful for selecting representative values from valid and invalid input groups?" : isTestCasesLesson ? "A transfer requirement allows amounts from R10 to R50,000. Which set of values is most useful for checking the lower boundary?" : isRequirementsLesson ? "A user story says customers can add beneficiaries. One acceptance criterion says: \"The system should be easy to use.\" What should the tester do?" : isLevelsTypesLesson ? "A developer has fixed a defect in the transfer fee calculation. The tester reruns the exact test that originally failed to confirm the fix. What is this called?" : isPrinciplesLesson ? "A tester has run the same successful payment test every day for several weeks, but it has not revealed any new defects. Which principle suggests the tester should review and expand the tests?" : isStlcLesson ? "A tester has executed a transfer test and found that the app sends R5,000 instead of the expected R500. What should happen next?" : isSdlcLesson ? "A tester reviews a user story and notices that the payment failure behaviour is not explained. Developers have not started coding yet. What is the best action?" : isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?")}</p>
+      <p>{apiTestingLesson?.question ?? manualUiRemainingLesson?.question ?? (isManualUiFunctionalLesson ? "A ShopStream tester adds a product priced at R120 to the cart and changes its quantity to 2. Which result best confirms the cart feature is working correctly?" : isManualUiRequirementsLesson ? "A requirement says shoppers can add products to the cart. Which UI check is the most useful and testable?" : isManualUiInterfaceLesson ? "A ShopStream tester selects Add to cart on a product card. Which approach gives the most complete check of this interaction?" : isManualUiIntroLesson ? "Which statement best explains the relationship between manual testing and UI testing?" : isDefectLesson ? "A tester reports that a transfer confirmation displays R5,000 instead of the R500 entered. Which information is most important to help the developer reproduce and investigate the defect?" : isTestDesignLesson ? "A transfer amount must be between R10 and R50,000. Which technique is most useful for selecting representative values from valid and invalid input groups?" : isTestCasesLesson ? "A transfer requirement allows amounts from R10 to R50,000. Which set of values is most useful for checking the lower boundary?" : isRequirementsLesson ? "A user story says customers can add beneficiaries. One acceptance criterion says: \"The system should be easy to use.\" What should the tester do?" : isLevelsTypesLesson ? "A developer has fixed a defect in the transfer fee calculation. The tester reruns the exact test that originally failed to confirm the fix. What is this called?" : isPrinciplesLesson ? "A tester has run the same successful payment test every day for several weeks, but it has not revealed any new defects. Which principle suggests the tester should review and expand the tests?" : isStlcLesson ? "A tester has executed a transfer test and found that the app sends R5,000 instead of the expected R500. What should happen next?" : isSdlcLesson ? "A tester reviews a user story and notices that the payment failure behaviour is not explained. Developers have not started coding yet. What is the best action?" : isQualityLesson ? "A banking app processes payments correctly, but it exposes customer account details to other users. What does this tell us about its quality?" : "A team is building a shopping app. A tester checks that adding one item to the cart works, then tries adding the same item several times and entering an invalid quantity. What is the main purpose of these testing activities?")}</p>
       <Question>
-        {manualUiRemainingLesson ? <>
-          {manualUiRemainingLesson.options.map((option, index) => <Option key={option} $selected={answer === index} $correct={answer === 1 && index === 1} onClick={() => { setAnswer(index); setCompleted(false); }}>{String.fromCharCode(65 + index)}. {option}</Option>)}
+        {apiTestingLesson || manualUiRemainingLesson ? <>
+          {(apiTestingLesson ?? manualUiRemainingLesson)!.options.map((option, index) => <Option key={option} $selected={answer === index} $correct={answer === 1 && index === 1} onClick={() => { setAnswer(index); setCompleted(false); }}>{String.fromCharCode(65 + index)}. {option}</Option>)}
         </> : isManualUiFunctionalLesson ? <>
           <Option $selected={answer === 0} onClick={() => { setAnswer(0); setCompleted(false); }}>A. The quantity field accepts the number 2, regardless of the cart total.</Option>
           <Option $selected={answer === 1} $correct={answer === 1} onClick={() => { setAnswer(1); setCompleted(false); }}>B. The cart shows the correct product, quantity 2, line total R240 and a matching overall total.</Option>
