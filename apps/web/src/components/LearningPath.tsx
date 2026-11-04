@@ -10,7 +10,7 @@ type Discipline = {
   outcome: string;
   lessons: string[];
   practice: string;
-  status: "Available" | "Coming next";
+  status: "Available" | "Coming next" | "In progress";
 };
 
 const disciplines: Discipline[] = [
@@ -28,7 +28,7 @@ const disciplines: Discipline[] = [
     outcome: "Independently test a web application by translating requirements into UI checks, validating workflows and input, investigating browser behaviour, and reporting reproducible defects.",
     lessons: ["Introduction to manual and UI testing", "Understanding the user interface", "Turning requirements into UI checks", "Functional UI testing", "Forms and input validation", "Navigation, sessions and application state", "Responsive and cross-browser testing", "Usability and accessibility testing", "Exploratory testing", "Browser DevTools for testers", "Investigating and documenting UI defects", "ShopStream: end-to-end testing capstone"],
     practice: "Test the ShopStream sample store. Validate search, product details, forms, cart and checkout across realistic user journeys, then investigate and report the issues you discover.",
-    status: "Coming next"
+    status: "In progress"
   },
   {
     id: "api", number: "03", title: "API Testing",
@@ -67,9 +67,9 @@ const CardCopy = styled.div({
   h3: { margin: "0 0 5px", color: "#edf4ff", fontSize: 13 },
   p: { margin: 0, color: "#8da1bd", fontSize: 11, lineHeight: 1.55 }
 });
-const Status = styled.span<{ $available: boolean }>(({ $available }) => ({
+const Status = styled.span<{ $status: Discipline["status"] }>(({ $status }) => ({
   display: "inline-flex", alignItems: "center", padding: "5px 8px", borderRadius: 20, whiteSpace: "nowrap",
-  background: $available ? "#17382f" : "#252f40", color: $available ? "#8ed9b6" : "#91a3bc", fontSize: 9, fontWeight: 700,
+  background: $status === "Available" ? "#17382f" : $status === "In progress" ? "#1b3455" : "#252f40", color: $status === "Available" ? "#8ed9b6" : $status === "In progress" ? "#91bdff" : "#91a3bc", fontSize: 9, fontWeight: 700,
   "@media(max-width:600px)": { display: "none" }
 }));
 const Details = styled.div({ padding: "0 20px 20px 75px", "@media(max-width:600px)": { padding: "0 16px 18px" } });
@@ -92,7 +92,7 @@ const LessonLink = styled.button({ border: 0, padding: 0, background: "transpare
 export function LearningPath() {
   const [expanded, setExpanded] = useState("fundamentals");
   const [showLesson, setShowLesson] = useState(false);
-  const [activeLesson, setActiveLesson] = useState<"what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles" | "test-levels-types" | "requirements-acceptance-criteria" | "test-scenarios-test-cases" | "test-design-techniques" | "defect-reporting-lifecycle" | "practical-testing-exercise">("what-is-testing");
+  const [activeLesson, setActiveLesson] = useState<"manual-ui-introduction" | "what-is-testing" | "why-quality-matters" | "software-development-lifecycle" | "software-testing-lifecycle" | "testing-principles" | "test-levels-types" | "requirements-acceptance-criteria" | "test-scenarios-test-cases" | "test-design-techniques" | "defect-reporting-lifecycle" | "practical-testing-exercise">("what-is-testing");
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   if (showLesson) return <LessonView lessonId={activeLesson} onBack={() => setShowLesson(false)} onComplete={() => setCompletedLessons(current => current.includes(activeLesson) ? current : [...current, activeLesson])} />;
   return <>
@@ -110,13 +110,13 @@ export function LearningPath() {
           <CardButton aria-expanded={isExpanded} onClick={() => setExpanded(isExpanded ? "" : discipline.id)}>
             <Number>{discipline.number}</Number>
             <CardCopy><h3>{discipline.title}</h3><p>{discipline.description}</p></CardCopy>
-            <Status $available={available}>{discipline.status}</Status>
+            <Status $status={discipline.status}>{discipline.status}</Status>
             <span aria-hidden="true" style={{ color: "#8ba2c0", fontSize: 17 }}>{isExpanded ? "−" : "+"}</span>
           </CardButton>
           {isExpanded && <Details>
             <Outcome><strong>What you will be able to do</strong><p>{discipline.outcome}</p></Outcome>
             <Columns>
-              <div><Subheading>Lessons in this discipline</Subheading><LessonList>{discipline.lessons.map((lesson, index) => <li key={lesson}>{discipline.id === "fundamentals" && index <= 10 ? <LessonLink type="button" onClick={() => { const lessonIds = ["what-is-testing", "why-quality-matters", "software-development-lifecycle", "software-testing-lifecycle", "testing-principles", "test-levels-types", "requirements-acceptance-criteria", "test-scenarios-test-cases", "test-design-techniques", "defect-reporting-lifecycle", "practical-testing-exercise"] as const; setActiveLesson(lessonIds[index]); setShowLesson(true); }}>{lesson} {completedLessons.includes(["what-is-testing", "why-quality-matters", "software-development-lifecycle", "software-testing-lifecycle", "testing-principles", "test-levels-types", "requirements-acceptance-criteria", "test-scenarios-test-cases", "test-design-techniques", "defect-reporting-lifecycle", "practical-testing-exercise"][index]) ? "✓" : "→"}</LessonLink> : lesson}</li>)}</LessonList></div>
+              <div><Subheading>Lessons in this discipline</Subheading><LessonList>{discipline.lessons.map((lesson, index) => <li key={lesson}>{(discipline.id === "fundamentals" && index <= 10) || (discipline.id === "ui" && index === 0) ? <LessonLink type="button" onClick={() => { const lessonIds = ["manual-ui-introduction", "what-is-testing", "why-quality-matters", "software-development-lifecycle", "software-testing-lifecycle", "testing-principles", "test-levels-types", "requirements-acceptance-criteria", "test-scenarios-test-cases", "test-design-techniques", "defect-reporting-lifecycle", "practical-testing-exercise"] as const; setActiveLesson(discipline.id === "ui" ? "manual-ui-introduction" : lessonIds[index + 1]); setShowLesson(true); }}>{lesson} {completedLessons.includes(["manual-ui-introduction", "what-is-testing", "why-quality-matters", "software-development-lifecycle", "software-testing-lifecycle", "testing-principles", "test-levels-types", "requirements-acceptance-criteria", "test-scenarios-test-cases", "test-design-techniques", "defect-reporting-lifecycle", "practical-testing-exercise"][index]) ? "✓" : "→"}</LessonLink> : lesson}</li>)}</LessonList></div>
               <div><Subheading>Practical application</Subheading>{discipline.id === "fundamentals" ? <Practice>
                 <PracticeTitle>Your first QA assignment</PracticeTitle>
                 <p>Test a simulated banking money-transfer feature. Work through the requirements, identify risks, design test scenarios and investigate a defect.</p>
