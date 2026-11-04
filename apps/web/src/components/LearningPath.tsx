@@ -24,10 +24,10 @@ const disciplines: Discipline[] = [
   },
   {
     id: "ui", number: "02", title: "Manual & UI Testing",
-    description: "Learn to explore an application, design useful test cases, execute tests and report defects clearly.",
-    outcome: "Turn user stories into test scenarios, execute browser-based checks and communicate reproducible defects.",
-    lessons: ["Understanding user stories and acceptance criteria", "Test scenarios and test case design", "Positive, negative and boundary testing", "Equivalence partitioning and boundary values", "Exploratory testing", "Browser DevTools for testers", "Writing clear and actionable bug reports", "Regression and retesting"],
-    practice: "Test the ShopStream sample store. Create test cases for search, product details, cart and checkout, then report any defects you find.",
+    description: "Learn to test real application workflows, explore browser behaviour and evaluate the experience from a user's perspective.",
+    outcome: "Independently test a web application by translating requirements into UI checks, validating workflows and input, investigating browser behaviour, and reporting reproducible defects.",
+    lessons: ["Introduction to manual and UI testing", "Understanding the user interface", "Turning requirements into UI checks", "Functional UI testing", "Forms and input validation", "Navigation, sessions and application state", "Responsive and cross-browser testing", "Usability and accessibility testing", "Exploratory testing", "Browser DevTools for testers", "Investigating and documenting UI defects", "ShopStream: end-to-end testing capstone"],
+    practice: "Test the ShopStream sample store. Validate search, product details, forms, cart and checkout across realistic user journeys, then investigate and report the issues you discover.",
     status: "Coming next"
   },
   {
